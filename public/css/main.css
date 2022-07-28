@@ -1,0 +1,587 @@
+:root {
+  --main-bg-color: #ff9019;
+  --dark-navbar-color: #1e272e;
+  --gray-bg-color: #808080;
+  --light-gray-bg-color: #ededed;
+  --vibrant-yellow: #ffd32a;
+  --main-blue: #3c40c6;
+  --light-blue: #0fbcf9;
+}
+body {
+  font-family: 'PT Sans Caption', sans-serif;
+  width: 100%;
+  height: 100%;
+  max-width: 2500px;
+  margin: 0 auto;
+}
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+  font-family: 'Kanit', 'PT Sans Caption', sans-serif;
+}
+h1, h2 {
+  font-weight: 700;
+}
+a {
+  text-decoration: none;
+}
+.colored-bg {
+  background-color: var(--main-bg-color);
+  color: #fff;
+}
+.light-bg {
+  background-color: #fff;
+  color: var(--dark-navbar-color);
+}
+.full-wh {
+  width: 100%;
+  height: 100%;
+}
+.top-element {
+  position: relative;
+  z-index: 100;
+}
+
+/*
+================================
+  NAVBAR FOR ALL PAGES
+================================
+*/
+.navbar {
+  background: linear-gradient(to bottom, #181c1f, #1e272e);
+}
+.nav-link {
+  font-size: 1.25rem;
+}
+.navbar-dark .navbar-toggler {
+  border: none;
+}
+
+/*
+================================
+  INDEX PAGE
+================================
+*/
+.main-header {
+  background-image: url("../images/bg/yugioh-header-sm.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: auto;
+  text-align: center;
+}
+.main-header-content {
+  width: 100%;
+  height: auto;
+}
+.duel-links-header {
+  font-family: 'Audiowide', 'Kanit', 'PT Sans Caption', sans-serif;
+  text-shadow: 2px 2px 10px var(--dark-navbar-color);
+}
+.main-btn {
+  background-color: var(--dark-navbar-color);
+  border: 2px solid #fff;
+  border-radius: 0.5rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.3s, text-shadow 0.3s;
+}
+.main-btn:hover,
+.main-btn:focus {
+  box-shadow: 0 0 5px #fff;
+  text-shadow: 0 0 5px #fff;
+  color: #fff;
+}
+.main-btn:before {
+  content: "";
+  background-color: #fff;
+  box-shadow: 0 0 10px #fff;
+  filter: blur(1px);
+  position: absolute;
+  width: 10px;
+  height: 100px;
+  top: -1rem;
+  opacity: 0.9;
+  transition: 0.6s;
+  transform: rotate(20deg) translateX(-45px);
+}
+.main-btn:hover:before {
+  transform: rotate(20deg) translate(120px, -30px);
+}
+.decks-btn {
+  border-color: var(--light-blue);
+}
+.decks-btn:hover,
+.decks-btn:focus {
+  box-shadow: 0 0 5px var(--light-blue);
+}
+.decks-btn:hover:before {
+  transform: rotate(20deg) translate(160px, -60px);
+}
+.intro i {
+  color: var(--main-bg-color);
+  background: linear-gradient(to left top, #ff3f34, #ff9019 60%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 4rem;
+}
+.intro p {
+  color: var(--gray-bg-color);
+}
+
+/*--- Latest Video Carousel ---*/
+
+.latest-uploads-section {
+  background: linear-gradient(to bottom, #212529, #ff9019 100%);
+  position: relative;
+  overflow: hidden;
+}
+.carousel-item h3 {
+  text-shadow: 2px 2px 10px var(--dark-navbar-color);
+}
+.carousel-control-next, .carousel-control-prev {
+  display: none;
+  background-color: var(--dark-navbar-color);
+  border: 3px solid #fff;
+  border-radius: 0.625rem;
+  width: auto;
+  padding: 0.75rem 1.5rem;
+  top: auto;
+  bottom: 0;
+}
+.carousel-control-prev:hover,
+.carousel-control-prev:focus {
+  box-shadow: 0 0 5px #fff;
+}
+.carousel-control-next:hover,
+.carousel-control-next:focus {
+  box-shadow: 0 0 5px #fff;
+}
+.carousel-control-prev-icon, .carousel-control-next-icon {
+  background-image: none;
+  width: auto;
+  height: auto;
+}
+.carousel-control-prev-icon i, .carousel-control-next-icon i {
+  display: block;
+  font-size: 1.5rem;
+}
+.carousel-indicators .indicator-button {
+  border: 5px solid #fff;
+  border-radius: 50%;
+  width: 3px;
+  height: 3px;
+  margin-left: 0.625rem;
+  margin-right: 0.625rem;
+}
+
+/*--- Accordian of Decks ---*/
+
+.accordion-header, .video-link-header {
+  font-family: 'Audiowide', 'Kanit', 'PT Sans Caption', sans-serif;
+}
+.accordion-button {
+  background-color: var(--dark-navbar-color);
+  border: 2px solid #fff;
+  color: #fff;
+  transition: box-shadow 0.3s, text-shadow 0.3s;
+}
+.accordion-button:not(.collapsed) {
+  color: #fff;
+  background-color: var(--dark-navbar-color);
+}
+.accordion-button::after {
+  content: none;  /* remove bootstrap dropdown arrow svg */
+}
+.accordion-button:hover,
+.accordion-button:focus {
+  border-color: var(--light-blue);
+  box-shadow: 0 0 5px var(--light-blue);
+  text-shadow: 0 0 5px #fff;
+}
+.accordion-btn-bg-pic {
+  display: none;
+  position: relative;
+}
+.accordion-btn-bg-pic:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 0, 0, 0), rgba(33, 37, 41, 1) 98%);
+  z-index: 50;
+}
+.accordion-button i {
+  position: absolute;
+  right: 0;
+  margin: 1.5rem;
+  transition: transform 0.2s ease;
+}
+.accordion-button:not(.collapsed) i {
+  transform: rotateX(180deg);
+}
+.video-link-container {
+  position: relative;
+  max-width: 600px;
+  height: auto;
+  padding-bottom: calc(var(--bs-gutter-x) * .5);
+}
+.video-link-content-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.video-link-bg-pic {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.video-link-bg-pic:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--main-blue);
+  background: radial-gradient(#3c40c6, #212529);
+  opacity: 0;
+  z-index: 2;
+  transition: opacity 250ms;
+}
+.video-link-content-wrap:hover .video-link-bg-pic:before {
+  opacity: 0.8;
+}
+.video-link-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+.video-link-header a {
+  color: #fff;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.video-link-header a .inner-text {
+  display: block;
+  color: var(--vibrant-yellow);
+  position: absolute;
+  top: 60%;
+  width: 100%;
+  text-align: center;
+  text-shadow: 4px 4px 8px var(--dark-navbar-color);
+}
+.opponent {
+  display: none;
+  margin-top: 18%;
+  transition: margin-top 250ms;
+}
+.video-link-content-wrap:hover .video-link-header .opponent {
+  margin-top: 0;
+}
+.additional-decks:not(.active) {
+  display: none;
+}
+
+/* --- Downloads Section --- */
+
+.downloads {
+  background: linear-gradient(to bottom, #212529 0%,#ff9019 100%);
+  position: relative;
+  overflow: hidden;
+}
+.bg-pattern-container {
+  position: absolute;
+  left: -4rem;
+  top: 0;
+  right: 0;
+}
+.bg-pattern-row {
+  position: relative;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.square-pattern {
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%,rgba(0,0,0,0.05) 100%);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: inline-block;
+  width: 10rem;
+  height: 10rem;
+  margin: 2rem;
+  transform: rotate(45deg);
+}
+
+/*
+================================
+  THE FOOTER FOR ALL PAGES
+================================
+*/
+.the-footer {
+  background-color: var(--dark-navbar-color);
+  background: linear-gradient(to bottom, #181c1f, #1e272e 60%);
+  color: #fff;
+}
+.the-footer .container {
+  width: 60%;
+}
+.footer-link {
+  color: var(--light-blue);
+  transition: color 0.3s;
+}
+.footer-link:hover,
+.footer-link:focus {
+  color: var(--main-bg-color);
+}
+.disclaimer {
+  color: #808e9b;
+}
+
+/*
+================================
+  DUEL-VIDEO PAGE
+================================
+*/
+.video-wrapper,
+.video-description {
+  max-width: 1063px;
+}
+.video-description {
+  border-bottom: 2px solid var(--light-blue);
+  padding: 1rem 0;
+}
+.upload-date {
+  margin-bottom: 0;
+}
+.cards-used-section {
+  overflow: auto;
+}
+.cards-used-section h2 {
+  text-shadow: 4px 4px 8px var(--dark-navbar-color);
+}
+.cards-grid-container {
+  position: relative;
+}
+.cards-row-margin {
+  margin-bottom: 0;
+  transition: margin-bottom 0.3s;
+}
+.cards-grid-container .row {
+  position: relative;
+}
+.card-picture img {
+  cursor: pointer;
+  width: 98%;
+  transition: box-shadow 300ms, width 300ms;
+}
+.card-picture img:hover,
+.card-picture img:focus {
+  box-shadow: 4px 4px 18px var(--dark-navbar-color);
+  width: 100%;
+}
+.card-expanded {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  box-shadow: 0 0 18px var(--dark-navbar-color);
+  overflow: hidden;
+  pointer-events: auto;
+  z-index: 50;
+  background: rgb(253,253,253);
+  background: -webkit-linear-gradient(rgba(253,253,253,1) 40%, rgba(180,250,255,1) 90%, rgba(135,240,255,1) 100%);
+  background: -moz-linear-gradient(rgba(253,253,253,1) 40%, rgba(180,250,255,1) 90%, rgba(135,240,255,1) 100%);
+  background: -o-linear-gradient(rgba(253,253,253,1) 40%, rgba(180,250,255,1) 90%, rgba(135,240,255,1) 100%);
+  background: linear-gradient(rgba(253,253,253,1) 40%, rgba(180,250,255,1) 90%, rgba(135,240,255,1) 100%);
+}
+.close-expanded-card-btn {
+  background: none;
+  border: none;
+  position: absolute;
+  padding: 0;
+  top: 1rem;
+  right: 0;
+  margin-right: 1.25rem;
+}
+.close-expanded-card-btn {
+  color: var(--light-blue);
+  font-size: 2.25rem;
+  transition: font-size 250ms, color 250ms;
+}
+.close-expanded-card-btn:hover,
+.close-expanded-card-btn:focus {
+  color: var(--main-blue);
+  font-size: 2.5rem;
+}
+.expanded-card-img {
+  max-width: 337px;
+}
+.property-icon {
+  display: inline-block;
+  color: var(--main-bg-color);
+  width: 30px;
+  text-align: left;
+}
+.card-textbox {
+  background-color: #fff;
+  border: 4px outset var(--gray-bg-color);
+  line-height: 1.6;
+}
+.summon-req {
+  color: var(--gray-bg-color);
+}
+.collapsed-skill-box {
+  max-width: 900px;
+}
+.skill-container {
+  background-color: var(--dark-navbar-color);
+  border-radius: 0.625rem;
+  color: #fff;
+}
+.skill-details {
+  border: 4px outset var(--gray-bg-color);
+  line-height: 1.6;
+}
+.skill-card-container {
+  min-width: 130px;
+  max-width: 260px;
+}
+.transparent-cover {
+  display: none;
+  background-color: var(--main-bg-color);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 2rem;
+  opacity: 0.5;
+  z-index: 10;
+}
+
+/*
+================================
+  MEDIA QUERIES
+================================
+*/
+@media (max-width: 576px) {
+  .cards-used-section {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+@media (min-width: 430px) {
+  .opponent {
+    display: block;
+  }
+}
+@media (min-width: 576px) {
+  .main-header {
+    background-image: url("../images/bg/yugioh-header.jpg");
+    text-align: left;
+  }
+  .carousel-control-next, .carousel-control-prev {
+    display: block;
+  }
+  .accordion-button {
+    padding: 0 !important;
+  }
+  .accordion-btn-bg-pic {
+    display: block;
+    width: 250px;
+    margin-right: 2rem;
+  }
+  .video-link-header a .inner-text {
+    font-size: 2rem;
+  }
+  .bg-design {
+    margin-top: -21.5rem;
+    margin-left: -4.5rem;
+  }
+}
+@media (min-width: 767px) {
+  .main-header {
+    min-height: 350px;
+  }
+  .main-header-content {
+    width: 50%;
+  }
+  .accordion-button {
+    font-size: 1.25rem;
+  }
+  .accordion-btn-bg-pic {
+    width: 300px;
+  }
+  .card-expanded {
+    width: 720px;
+  }
+}
+@media (min-width: 992px) {
+  .main-header {
+    min-height: 400px;
+  }
+  .main-header-content {
+    height: 100%;
+  }
+  .carousel-control-prev-icon i, .carousel-control-next-icon i {
+    font-size: 2rem;
+  }
+  .accordion-button {
+    font-size: 1.75rem;
+  }
+  .accordion-btn-bg-pic {
+    width: 400px;
+    margin-right: 5rem;
+  }
+  .card-expanded {
+    width: 960px;
+  }
+  .close-expanded-card-btn {
+    font-size: 2.5rem;
+    margin-right: 1.5rem;
+  }
+  .close-expanded-card-btn:hover,
+  .close-expanded-card-btn:focus {
+    font-size: 2.75rem;
+  }
+}
+@media (min-width: 1200px) {
+  .cards-row-margin {
+    margin-bottom: 15.625rem;
+  }
+}
+@media (min-width: 1250px) {
+  .carousel-control-next, .carousel-control-prev {
+    top: 50%;
+    bottom: auto;
+  }
+}
+@media (min-width: 1400px) {
+  .cards-row-margin {
+    margin-bottom: 12.5rem;
+  }
+}
+@media (min-width: 1537px) {
+  .main-header {
+    background-image: url("../images/bg/yugioh-header-xl.jpg");
+    height: 450px;
+  }
+}
+@media (min-width: 2200px) {
+  .square-pattern {
+    width: 12rem;
+    height: 12rem;
+    margin: 2.33rem;
+  }
+}

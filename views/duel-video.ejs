@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="author" content="Felix Lazo">
+    <meta name="description" content="Duel replay video from the mobile game Yu-Gi-Oh! Duel Links. View the popular Yu-Gi-Oh! cards I used in the duel.">
+    <title>Duel Links Replay Video</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Kanit&family=PT+Sans+Caption&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon_io//favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon_io//favicon-16x16.png">
+    <link rel="manifest" href="images/favicon/favicon_io//site.webmanifest">
+    <link rel="stylesheet" href="../css/main.css">
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+      <span class="navbar-brand fs-4">Duel Links Replays</span>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="navbarSupportedContent" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item px-3"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item px-3"><a class="nav-link" href="/#decks">Decks</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- VIDEO -->
+    <section id="video-section" class="container-fluid duel-video-container light-bg py-5">
+      <h1 class="display-5 mb-5 text-center"><%= duel.title %></h1>
+      <div id="<%= duel.duelName %>" class="video-wrapper mx-auto">
+        <video id="video-player" class="video-js vjs-big-play-centered">
+          <source src="https://elasticbeanstalk-us-east-1-801833297134.s3.amazonaws.com/duel_links_videos/<%= collection %>/<%= duel.duelName %>.mp4" type="video/mp4">
+          <source src="https://" type="video/webm">
+          <p class="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a web browser that
+            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+          </p>
+        </video>
+      </div>
+      <div class="video-description mx-auto">
+        <p class="upload-date"><%= duel.uploadDate %></p>
+      </div>
+    </section>
+
+    <!-- CARDS -->
+    <section id="cards-used-in-duel" class="cards-used-section container-fluid colored-bg p-5">
+      <h2 class="mb-5 text-center">Cards Used In Duel</h2>
+      <div id="cards-used-container" class="cards-grid-container container">
+        <div id="cards-used-row" class="row">
+          <% for(var i = 0; i < numOfCards; i++) { %>
+          <div class="col-6 col-sm-4 col-lg-3 col-xl-2 mb-5">
+            <div class="yugioh-card-wrapper full-wh">
+              <div id="<%= duel.cards[i].htmlId %>" class="yugioh-card full-wh">
+                <picture class="card-picture <%= duel.cards[i].type %> d-block full-wh">
+                  <img class="d-block" src="../images/cards/<%= duel.cards[i].imgDir %>/<%= duel.cards[i].htmlId %>.jpg" alt="<%= duel.cards[i].name %>">
+                </picture>
+              </div>
+            </div>
+          </div>
+          <div id="expand-<%= duel.cards[i].htmlId %>" class="card-expanded container light-bg pt-5 pb-4 ps-4 pe-4">
+            <button id="close-<%= duel.cards[i].htmlId %>" class="close-expanded-card-btn" type="button">
+              <i class="top-element d-block far fa-times-circle"></i>
+            </button>
+            <div class="row mt-3">
+              <div class="col-md-4">
+                <picture class="expanded-card-wrap top-element d-block mb-3">
+                  <img src="../images/cards/<%= duel.cards[i].imgDir %>/<%= duel.cards[i].htmlId %>.jpg" class="expanded-card-img d-block mx-auto full-wh" alt="<%= duel.cards[i].name %>">
+                </picture>
+              </div>
+              <div class="col-md-8">
+                  <!-- name -->
+                  <h3 class="top-element mb-3"><%= duel.cards[i].name %></h3>
+                  <% if(isMonster[i]) { %>
+                  <!-- level -->
+                  <div class="monster-level card-property top-element mb-3">
+                    <span class="property"><i class="fas fa-star property-icon"></i> <span class="fw-bold">Level:</span></span> <%= duel.cards[i].level %>
+                  </div>
+                  <!-- attribute -->
+                  <div class="monster-attribute card-property top-element mb-3">
+                    <span class="property"><i class="fas fa-bookmark property-icon"></i> <span class="fw-bold">Attribute:</span></span> <%= duel.cards[i].attribute %>
+                  </div>
+                  <!-- type (dragon icon) -->
+                  <div class="monster-type card-property top-element mb-3">
+                    <span class="property"><i class="fas fa-dragon property-icon"></i> <span class="fw-bold">Type:</span></span> <%= duel.cards[i].type %>
+                  </div>
+                  <% } else { %>
+                    <!-- type (bookmark icon) -->
+                    <div class="spell-trap-type card-property top-element mb-3">
+                      <span class="property"><i class="fas fa-bookmark property-icon"></i> <span class="fw-bold">Type:</span></span> <%= duel.cards[i].type %>
+                    </div>
+                  <% } %>
+                  <!-- text-box -->
+                  <div class="card-textbox top-element p-2 mb-3">
+                    <% if(isMonster[i]) { %>
+                      <!-- summon requirement -->
+                      <div class="summon-req pb-1"><%= duel.cards[i].summonRequirement %></div>
+                    <% } %>
+                    <p class="mb-0"><%= duel.cards[i].effect %></p>
+                  </div>
+                  <% if(isMonster[i]) { %>
+                  <!-- atk/def -->
+                  <div class="monster-stats top-element d-flex justify-content-between justify-content-sm-around">
+                    <div class="atk">
+                      <i class="fas fa-meteor property-icon"></i> <span class="fw-bold">ATK:</span> <%= duel.cards[i].atk %>
+                    </div>
+                    <div class="def">
+                      <i class="fas fa-shield-alt property-icon"></i> <span class="fw-bold">DEF:</span> <%= duel.cards[i].def %>
+                    </div>
+                  </div>
+                  <% } %>
+              </div>
+            </div>  <!-- end row -->
+          </div>  <!-- end card-expanded container -->
+          <% } %>
+          <div id="blur-cards" class="transparent-cover"></div>
+        </div>
+        <button type="button" class="skill-btn btn btn-dark btn-lg" data-bs-toggle="collapse" data-bs-target="#skill" aria-expanded="false" aria-controls="skill">
+          Skill: <%= duel.skill %>
+        </button>
+        <div id="skill" class="collapse collapsed-skill-box">
+          <div class="container-fluid skill-container p-4 mt-3">
+            <div class="skill">
+              <p class="skill-details p-3 mb-0"><%= duel.skillDetail %></p>
+            </div>
+            <% if(duel.containsSkillCard) { %>
+            <div class="d-flex justify-content-center justify-content-md-start flex-wrap flex-md-nowrap mt-4">
+              <div class="skill-card-container">
+                <picture class="full-wh">
+                  <img class="full-wh" src="<%= duel.skillCardPath %>" alt="<%= duel.skillCardName %>">
+                </picture>
+              </div>
+              <div class="skill-card-details p-3">
+                <p class="skill-card-name"><%= duel.skillCardName %></p>
+                <p class="skill-card-type"><%= duel.skillCardType %></p>
+                <p class="skill-card-effect"><%= duel.skillCardEffect %></p>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="the-footer p-5">
+      <div class="container">
+        <div class="footer-links d-flex justify-content-evenly">
+          <a class="footer-link" href="https://store.steampowered.com/app/601510/YuGiOh_Duel_Links/" target="_blank"><i class="fab fa-steam fs-4"></i></a>
+          <a class="footer-link" href="https://jrz5220.github.io/felixlazo/contact.html" target="_blank"><i class="fas fa-envelope fs-4"></i></a>
+          <a class="footer-link" href="https://github.com/" target="_blank"><i class="fab fa-github fs-4"></i></a>
+        </div>
+        <p class="disclaimer mt-4 mb-0"><small>This website is not affiliated with the Konami Corporation. All information related to the Yu-Gi-Oh! trading card game and the Yu-Gi-Oh! Duel Links digital game is owned and copyrighted by Konmai.</small></p>
+      </div>
+    </footer>
+
+    <script src="https://kit.fontawesome.com/550ddecd5b.js" crossorigin="anonymous"></script>
+    <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
+    <script src="https://cdn.sc.gl/videojs-hotkeys/0.2/videojs.hotkeys.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../js/duel-video-page.js"></script>
+  </body>
+</html>
