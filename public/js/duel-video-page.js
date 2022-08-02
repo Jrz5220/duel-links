@@ -1,4 +1,4 @@
-const videoPosterPath = "../images/video-posters/" + $(".video-wrapper").first().attr("id") + ".jpg";
+const videoPosterPath = "../images/video-posters/" + $(".video-wrapper").first().attr("id") + ".JPG";
 const cardsUsedRow = document.getElementById("cards-used-row");
 let cardRowExpanded = false;
 

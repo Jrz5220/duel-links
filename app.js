@@ -170,7 +170,7 @@ app.get("/dino-v-sartorius-desperado", function(req, res) {
 });
 /* ARCHFIENDS */
 app.get("/archfiend-v-evil-heroes", function(req, res) {
-  renderDuelVideoPage(res, ArchfiendDuel, "archfiend-v-evil-heroe", "archfiend");
+  renderDuelVideoPage(res, ArchfiendDuel, "archfiend-v-evil-heroes", "archfiend");
 });
 app.get("/archfiend-v-gladiator-beasts", function(req, res) {
   renderDuelVideoPage(res, ArchfiendDuel, "archfiend-v-gladiator-beasts", "archfiend");
