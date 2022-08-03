@@ -1,4 +1,4 @@
-// Heroku location
+// github version
 
 const express = require("express");
 /* use object document mapper (JavaScript objects to MongoDB documents) instead of native MondoDB driver */
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 try {
-  mongoose.connect("mongodb+srv://new-user_01:rGSJROzTkOGaT4Am@cluster0.gt8nl.mongodb.net/duelsDB?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
+  mongoose.connect("mongodb+srv://<username>:<password>@cluster0.gt8nl.mongodb.net/<database>?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true});
 } catch(error) {
   console.log("could not connect to the mongo database. visit https://mongoosejs.com/docs/connections.html#error-handling for more information.");
 }
