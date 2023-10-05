@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta name="author" content="Felix Lazo">
-    <meta name="description" content="View competitive duel videos from the mobile game Yu-Gi-Oh! Duel Links. The duel replay videos include duels from gold rank through king of games, as well as the KC cup and special events.">
+    <meta name="description" content="View competitive duel videos from the mobile game Yu-Gi-Oh! Duel Links. The replay videos include duels from gold rank through king of games, as well as the KC cup and special events.">
     <title>Yu-Gi-Oh Duel Links Replays</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,18 +19,48 @@
   </head>
   <body>
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-      <span class="navbar-brand fs-4">Duel Links Replays</span>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div id="navbarSupportedContent" class="collapse navbar-collapse">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item px-3"><a class="nav-link" href="#decks">Decks</a></li>
-          <li class="nav-item px-3"><a class="nav-link" href="#download">Download</a></li>
-        </ul>
-      </div>
-    </nav>
+    <div class="navbar-container navbar-dark bg-dark px-3">
+      <nav class="main-navbar navbar navbar-expand-lg">
+        <span class="navbar-brand fs-4">Duel Links Replays</span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbarSupportedContent" class="collapse navbar-collapse">
+          <ul class="navbar-nav flex-wrap justify-content-end ms-auto" style="flex-wrap:wrap;justify-content:end;">
+            <li class="nav-item px-3"><a class="nav-link" href="#decks">Decks</a></li>
+            <li class="nav-item px-3"><a class="nav-link" href="#download">Download</a></li>
+            <% if(isLoggedIn){ %>
+              <li class="nav-item px-3"><a class="nav-link" href="/account">Account</a></li>
+            <% } else { %>
+              <li class="nav-item px-3 d-flex align-items-center">
+                <button class="nav-link login-btn" type="button" data-bs-toggle="collapse" data-bs-target="#loginFormListItem" aria-expanded="false" aria-controls="loginFormListItem">Sign In</button>
+              </li>
+              <li id="loginFormListItem" class="nav-item px-3 py-1 collapse login-item">
+                <div class="d-flex flex-column align-items-lg-end">
+                  <form id="loginForm" class="card card-body login-form bg-light" action="/sign-in" method="post">
+                    <% if(hasServerMsg) { %>
+                      <p id="serverLoginErr" class="small" style="color: #aa0000;"><%= theMsg %></p>
+                    <% } %>
+                    <div id="loginWarning" class="small" role="alert" aria-atomic="true" style="color: #aa0000;"></div>
+                    <label for="username" class="d-block">Username</label>
+                    <input type="text" id="username" class="d-block mb-3 login-input" name="username" required>
+                    <label for="password" class="d-block">Password</label>
+                    <input type="password" id="password" class="d-block mb-1 login-input" name="password" required>
+                    <div class="mb-3">
+                      <a href="/forgotPassword" class="text-primary forgot-pwd-link">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary" name="button">Sign In</button>
+                  </form>
+                  <div class="mt-2">
+                    <a href="/registerPage" class="create-account-link">Create Account</a>
+                  </div>
+                </div>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+      </nav>
+    </div>
 
     <!-- HEADER -->
     <header class="main-header container-fluid colored-bg p-5">
@@ -47,19 +77,19 @@
     <section class="container-fluid p-4">
       <div class="row">
         <article class="intro col-md-4 text-center p-4">
-          <i class="fas fa-play-circle mb-3"></i>
+          <i class="fas fa-play-circle mb-3" aria-hidden="true"></i>
           <h2>Duel Replays</h2>
           <p>Watch some of my favorite duel links replay videos</p>
         </article>
         <article class="intro col-md-4 text-center p-4">
-          <i class="fas fa-crown mb-3"></i>
+          <i class="fas fa-crown mb-3" aria-hidden="true"></i>
           <h2>King of Games</h2>
           <p>King of Games Duelist and KC Cup competitor</p>
         </article>
         <article class="intro col-md-4 text-center p-4">
-          <i class="fas fa-heart mb-3"></i>
+          <i class="fas fa-heart mb-3" aria-hidden="true"></i>
           <h2>Popular Cards</h2>
-          <p>View popular cards used in duel links</p>
+          <p>View popular cards used in the duel replays</p>
         </article>
       </div>
     </section>
@@ -79,7 +109,7 @@
           <div class="square-pattern"></div>
           <div class="square-pattern"></div>
         </div>
-        <div class="bg-pattern-row" aria-hidden="true">
+        <div class="bg-pattern-row">
           <div class="square-pattern"></div>
           <div class="square-pattern"></div>
           <div class="square-pattern"></div>
@@ -91,7 +121,7 @@
           <div class="square-pattern"></div>
           <div class="square-pattern"></div>
         </div>
-        <div class="bg-pattern-row" aria-hidden="true">
+        <div class="bg-pattern-row">
           <div class="square-pattern"></div>
           <div class="square-pattern"></div>
           <div class="square-pattern"></div>
@@ -103,7 +133,7 @@
           <div class="square-pattern"></div>
           <div class="square-pattern"></div>
         </div>
-        <div class="bg-pattern-row" aria-hidden="true">
+        <div class="bg-pattern-row">
           <div class="square-pattern"></div>
           <div class="square-pattern"></div>
           <div class="square-pattern"></div>
@@ -118,13 +148,13 @@
       </div>
       <h2 class="display-5 text-center my-4">Latest Uploads</h2>
       <div id="carouselExampleIndicators" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="false">
-        <div class="carousel-indicators mb-0">
+        <div class="carousel-indicators display-indicators mb-0">
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active indicator-button" aria-current="true" aria-label="Slide 1"></button>
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" class="indicator-button" aria-label="Slide 2"></button>
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" class="indicator-button" aria-label="Slide 3"></button>
         </div>
         <div class="carousel-inner">
-          <div class="carousel-item active">
+          <article class="carousel-item active">
             <div class="video-wrapper mx-auto">
               <video id="video-1" class="video-js vjs-big-play-centered">
                 <source src="https://elasticbeanstalk-us-east-1-801833297134.s3.amazonaws.com/duel_links_videos/vampire/vampire-v-relinquished.mp4" type="video/mp4">
@@ -134,9 +164,9 @@
                 </p>
               </video>
             </div>
-            <h3 class="text-center p-4">Vampires vs Relinquished</h3>
-          </div>
-          <div class="carousel-item">
+            <h3 class="latest-upload-title text-center p-4">Vampires vs Relinquished</h3>
+          </article>
+          <article class="carousel-item">
             <div class="video-wrapper mx-auto">
               <video id="video-2" class="video-js vjs-big-play-centered">
                 <source src="https://elasticbeanstalk-us-east-1-801833297134.s3.amazonaws.com/duel_links_videos/vendread/vendread-v-lightsworn.mp4" type="video/mp4">
@@ -146,9 +176,9 @@
                 </p>
               </video>
             </div>
-            <h3 class="text-center p-4">Vendreads vs Lightsworns</h3>
-          </div>
-          <div class="carousel-item">
+            <h3 class="latest-upload-title text-center p-4">Vendreads vs Lightsworns</h3>
+          </article>
+          <article class="carousel-item">
             <div class="video-wrapper mx-auto">
               <video id="video-3" class="video-js vjs-big-play-centered">
                 <source src="https://elasticbeanstalk-us-east-1-801833297134.s3.amazonaws.com/duel_links_videos/dino/dino-v-sartorius-desperado.mp4" type="video/mp4">
@@ -158,8 +188,8 @@
                 </p>
               </video>
             </div>
-            <h3 class="text-center p-4">Dinos vs Barrel Dragon</h3>
-          </div>
+            <h3 class="latest-upload-title text-center p-4">Dinos vs Barrel Dragon</h3>
+          </article>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
@@ -174,6 +204,7 @@
 
     <!-- DECKS -->
     <section id="decks" class="p-5">
+      <h2 class="display-5 text-center my-4">Decks</h2>
       <div class="container">
         <div class="accordion" id="accordionExample">
           <!-- VENDREADS -->
@@ -198,7 +229,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-shiranui.jpg" alt="Vendreads vs Shiranui">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-shiranui"><span class="inner-text">VS <span class="opponent">Shiranui</span></span></a>
+                          <a href="/duelVideo/vendread-v-shiranui"><span class="inner-text">VS <span class="opponent">Shiranui</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -208,7 +239,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-chimeratech-rampage-dragon.jpg" alt="Vendreads vs Chimeratech Rampage Dragon">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-chimeratech-rampage-dragon"><span class="inner-text">VS <span class="opponent">Chimeratech</span></span></a>
+                          <a href="/duelVideo/vendread-v-chimeratech-rampage-dragon"><span class="inner-text">VS <span class="opponent">Chimeratech</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -218,7 +249,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-elemental-heroes.jpg" alt="Vendreads vs Elemental Heroes">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-elemental-heroes"><span class="inner-text">VS <span class="opponent">Elemental Heroes</span></span></a>
+                          <a href="/duelVideo/vendread-v-elemental-heroes"><span class="inner-text">VS <span class="opponent">Elemental Heroes</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -228,7 +259,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-sartorius-desperado.jpg" alt="Vendreads vs Desparado Coin Flip">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-sartorius-desperado"><span class="inner-text">VS <span class="opponent">Coin Flip</span></span></a>
+                          <a href="/duelVideo/vendread-v-sartorius-desperado"><span class="inner-text">VS <span class="opponent">Coin Flip</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -238,7 +269,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-blackwings.jpg" alt="Vendreads vs Blackwings">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-blackwings"><span class="inner-text">VS <span class="opponent">Blackwings</span></span></a>
+                          <a href="/duelVideo/vendread-v-blackwings"><span class="inner-text">VS <span class="opponent">Blackwings</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -248,7 +279,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-top-duelist.jpg" alt="Vendreads vs Top Duelist">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-top-duelist"><span class="inner-text">VS <span class="opponent">WCS 2019 Top 500</span></span></a>
+                          <a href="/duelVideo/vendread-v-top-duelist"><span class="inner-text">VS <span class="opponent">WCS 2019 Top 500</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -258,7 +289,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-invoker.jpg" alt="Vendreads vs Invoker">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-invoker"><span class="inner-text">VS <span class="opponent">Invoker</span></span></a>
+                          <a href="/duelVideo/vendread-v-invoker"><span class="inner-text">VS <span class="opponent">Invoker</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -268,7 +299,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-yubel.jpg" alt="Vendreads vs Yubel">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-yubel"><span class="inner-text">VS <span class="opponent">Yubel</span></span></a>
+                          <a href="/duelVideo/vendread-v-yubel"><span class="inner-text">VS <span class="opponent">Yubel</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -278,7 +309,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-burn.jpg" alt="Vendreads vs Burn">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-burn"><span class="inner-text">VS <span class="opponent">Burn</span></span></a>
+                          <a href="/duelVideo/vendread-v-burn"><span class="inner-text">VS <span class="opponent">Burn</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -288,7 +319,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-cyber-end-dragon.jpg" alt="Vendreads vs Cyber End Dragon">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-cyber-end-dragon"><span class="inner-text">VS <span class="opponent">Cyber End Dragon</span></span></a>
+                          <a href="/duelVideo/vendread-v-cyber-end-dragon"><span class="inner-text">VS <span class="opponent">Cyber End Dragon</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -298,7 +329,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-desperado-barrel-dragon.jpg" alt="Vendreads vs Desperado Barrel Dragon">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-desperado-barrel-dragon"><span class="inner-text">VS <span class="opponent">Desperado Barrel Dragon</span></span></a>
+                          <a href="/duelVideo/vendread-v-desperado-barrel-dragon"><span class="inner-text">VS <span class="opponent">Desperado Barrel Dragon</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -308,7 +339,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-dark-magician.jpg" alt="Vendreads vs Dark Magician">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-dark-magician"><span class="inner-text">VS <span class="opponent">Dark Magician</span></span></a>
+                          <a href="/duelVideo/vendread-v-dark-magician"><span class="inner-text">VS <span class="opponent">Dark Magician</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -318,7 +349,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-magnets.jpg" alt="Vendreads vs Magnets">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vendread-v-magnets"><span class="inner-text">VS <span class="opponent">Magnets</span></span></a>
+                          <a href="/duelVideo/vendread-v-magnets"><span class="inner-text">VS <span class="opponent">Magnets</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -348,7 +379,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-ancient-gears.jpg" alt="Vampires vs Ancient Gears">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vampire-v-ancient-gears"><span class="inner-text">VS <span class="opponent">Ancient Gears</span></span></a>
+                          <a href="/duelVideo/vampire-v-ancient-gears"><span class="inner-text">VS <span class="opponent">Ancient Gears</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -358,7 +389,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-fortune-ladies.jpg" alt="Vampires vs Fortune Ladies">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vampire-v-fortune-ladies"><span class="inner-text">VS <span class="opponent">Fortune Ladies</span></span></a>
+                          <a href="/duelVideo/vampire-v-fortune-ladies"><span class="inner-text">VS <span class="opponent">Fortune Ladies</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -368,7 +399,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-cerulean-sacred-phoenix.jpg" alt="Vampires vs Cerulean Sacred Phoenix">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vampire-v-cerulean-sacred-phoenix"><span class="inner-text">VS <span class="opponent">Cerulean Sacred Phoenix</span></span></a>
+                          <a href="/duelVideo/vampire-v-cerulean-sacred-phoenix"><span class="inner-text">VS <span class="opponent">Cerulean Sacred Phoenix</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -378,7 +409,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-burn.jpg" alt="Vampires vs Burn">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vampire-v-burn"><span class="inner-text">VS <span class="opponent">Burn</span></span></a>
+                          <a href="/duelVideo/vampire-v-burn"><span class="inner-text">VS <span class="opponent">Burn</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -388,7 +419,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-subterrors.jpg" alt="Vampires vs Subterrors">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vampire-v-subterrors"><span class="inner-text">VS <span class="opponent">Subterrors</span></span></a>
+                          <a href="/duelVideo/vampire-v-subterrors"><span class="inner-text">VS <span class="opponent">Subterrors</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -398,7 +429,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-magician-girls.jpg" alt="Vampires vs Magician Girls">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vampire-v-magician-girls"><span class="inner-text">VS <span class="opponent">Magician Girls</span></span></a>
+                          <a href="/duelVideo/vampire-v-magician-girls"><span class="inner-text">VS <span class="opponent">Magician Girls</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -408,7 +439,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-relinquished.jpg" alt="Vampires vs Relinquished">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/vampire-v-relinquished"><span class="inner-text">VS <span class="opponent">Relinquished</span></span></a>
+                          <a href="/duelVideo/vampire-v-relinquished"><span class="inner-text">VS <span class="opponent">Relinquished</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -438,7 +469,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-silent-magician.jpg" alt="Black Luster Soldier - Sacred Soldier vs Silent Magician">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/sacred-soldier-v-silent-magician"><span class="inner-text">VS <span class="opponent">Silent Magician</span></span></a>
+                          <a href="/duelVideo/sacred-soldier-v-silent-magician"><span class="inner-text">VS <span class="opponent">Silent Magician</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -448,7 +479,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-blue-eyes.jpg" alt="Black Luster Soldier - Sacred Soldier vs Blue-Eyes">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/sacred-soldier-v-blue-eyes"><span class="inner-text">VS <span class="opponent">Blue-Eyes</span></span></a>
+                          <a href="/duelVideo/sacred-soldier-v-blue-eyes"><span class="inner-text">VS <span class="opponent">Blue-Eyes</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -458,7 +489,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-sacred-soldier.jpg" alt="Black Luster Soldier - Sacred Soldier FTK">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/sacred-soldier-ftk"><span class="inner-text">FTK</span></a>
+                          <a href="/duelVideo/sacred-soldier-ftk"><span class="inner-text">FTK</span></a>
                         </h4>
                       </div>
                     </div>
@@ -468,7 +499,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-destiny-heroes.jpg" alt="Black Luster Soldier - Sacred Soldier vs Destiny Heroes">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/sacred-soldier-v-destiny-heroes"><span class="inner-text">VS <span class="opponent">Destiny Heroes</span></span></a>
+                          <a href="/duelVideo/sacred-soldier-v-destiny-heroes"><span class="inner-text">VS <span class="opponent">Destiny Heroes</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -478,7 +509,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-noble-knights.jpg" alt="Black Luster Soldier - Sacred Soldier vs Noble Knights">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/sacred-soldier-v-noble-knights"><span class="inner-text">VS <span class="opponent">Noble Knights</span></span></a>
+                          <a href="/duelVideo/sacred-soldier-v-noble-knights"><span class="inner-text">VS <span class="opponent">Noble Knights</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -488,7 +519,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-amazoness.jpg" alt="Black Luster Soldier - Sacred Soldier vs Amazoness">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/sacred-soldier-v-amazoness"><span class="inner-text">VS <span class="opponent">Amazoness</span></span></a>
+                          <a href="/duelVideo/sacred-soldier-v-amazoness"><span class="inner-text">VS <span class="opponent">Amazoness</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -498,7 +529,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-masked-beast-des-gardius.jpg" alt="Black Luster Soldier - Sacred Soldier vs Masked Beast Des Gardius">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/sacred-soldier-v-masked-beast-des-gardius"><span class="inner-text">VS <span class="opponent">Masked Beast Des Gardius</span></span></a>
+                          <a href="/duelVideo/sacred-soldier-v-masked-beast-des-gardius"><span class="inner-text">VS <span class="opponent">Masked Beast Des Gardius</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -508,7 +539,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-sacred-soldier.jpg" alt="Black Luster Soldier - Sacred Soldier with Lava Golem">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/sacred-soldier-lava-golem-combo"><span class="inner-text">Lava Golem Combo</span></a>
+                          <a href="/duelVideo/sacred-soldier-lava-golem-combo"><span class="inner-text">Lava Golem Combo</span></a>
                         </h4>
                       </div>
                     </div>
@@ -538,7 +569,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-subterrors.jpg" alt="Dinos vs Subterrors">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/dino-v-subterrors"><span class="inner-text">VS <span class="opponent">Subterrors</span></span></a>
+                          <a href="/duelVideo/dino-v-subterrors"><span class="inner-text">VS <span class="opponent">Subterrors</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -548,7 +579,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-gravekeepers.jpg" alt="Dinos vs Gravekeepers">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/dino-v-gravekeepers"><span class="inner-text">VS <span class="opponent">Gravekeepers</span></span></a>
+                          <a href="/duelVideo/dino-v-gravekeepers"><span class="inner-text">VS <span class="opponent">Gravekeepers</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -558,7 +589,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-sartorius-desperado.jpg" alt="Dinos vs Sartorius Desperado">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/dino-v-sartorius-desperado"><span class="inner-text">VS <span class="opponent">Sartorius Desperado</span></span></a>
+                          <a href="/duelVideo/dino-v-sartorius-desperado"><span class="inner-text">VS <span class="opponent">Sartorius Desperado</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -588,7 +619,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-evil-heroes.jpg" alt="Archfiends vs Evil Heroes">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/archfiend-v-evil-heroes"><span class="inner-text">VS <span class="opponent">Evil Heroes</span></span></a>
+                          <a href="/duelVideo/archfiend-v-evil-heroes"><span class="inner-text">VS <span class="opponent">Evil Heroes</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -598,7 +629,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-red-eyes-slash-dragon.jpg" alt="Archfiends vs Dragons">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/archfiend-v-dragons"><span class="inner-text">VS <span class="opponent">Dragons</span></span></a>
+                          <a href="/duelVideo/archfiend-v-dragons"><span class="inner-text">VS <span class="opponent">Dragons</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -608,7 +639,7 @@
                           <img class="d-block full-wh" src="../images/bg/video-link/vs-gladiator-beasts.jpg" alt="Archfiends vs Gladiator Beasts">
                         </picture>
                         <h4 class="video-link-header">
-                          <a href="/archfiend-v-gladiator-beasts"><span class="inner-text">VS <span class="opponent">Gladiator Beasts</span></span></a>
+                          <a href="/duelVideo/archfiend-v-gladiator-beasts"><span class="inner-text">VS <span class="opponent">Gladiator Beasts</span></span></a>
                         </h4>
                       </div>
                     </div>
@@ -639,7 +670,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/psychic-1.jpg" alt="Psychics 1">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/psychic-1"><span class="inner-text">Psychics <span class="opponent">1</span></span></a>
+                            <a href="/duelVideo/psychic-1"><span class="inner-text">Psychics <span class="opponent">1</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -649,7 +680,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/psychic-2.jpg" alt="Psychics 2">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/psychic-2"><span class="inner-text">Psychics <span class="opponent">2</span></span></a>
+                            <a href="/duelVideo/psychic-2"><span class="inner-text">Psychics <span class="opponent">2</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -679,7 +710,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/amazon-mirror-match.jpg" alt="Amazon Mirror Match 1">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/amazon-mirror-match-1"><span class="inner-text">Mirror Match <span class="opponent">1</span></span></a>
+                            <a href="/duelVideo/amazon-mirror-match-1"><span class="inner-text">Mirror Match <span class="opponent">1</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -689,7 +720,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/amazon-mirror-match.jpg" alt="Amazon Mirror Match 2">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/amazon-mirror-match-2"><span class="inner-text">Mirror Match <span class="opponent">2</span></span></a>
+                            <a href="/duelVideo/amazon-mirror-match-2"><span class="inner-text">Mirror Match <span class="opponent">2</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -699,7 +730,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/vs-anti-trap.jpg" alt="Amazon vs Anti-Trap">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/amazon-v-anti-trap"><span class="inner-text">VS <span class="opponent">Anti-Trap</span></span></a>
+                            <a href="/duelVideo/amazon-v-anti-trap"><span class="inner-text">VS <span class="opponent">Anti-Trap</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -729,7 +760,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/vs-burn.jpg" alt="Elementsabers vs Burn">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/elementsaber-v-burn"><span class="inner-text">VS <span class="opponent">Burn</span></span></a>
+                            <a href="/duelVideo/elementsaber-v-burn"><span class="inner-text">VS <span class="opponent">Burn</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -759,7 +790,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/vs-sylvans.jpg" alt="Red-Eyes Zombie Dragon vs Sylvans">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/rezd-v-sylvans"><span class="inner-text">VS <span class="opponent">Sylvans</span></span></a>
+                            <a href="/duelVideo/rezd-v-sylvans"><span class="inner-text">VS <span class="opponent">Sylvans</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -769,7 +800,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/vs-armed-dragon.jpg" alt="Red-Eyes Zombie Dragon vs Armed Dragon">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/rezd-v-armed-dragon"><span class="inner-text">VS <span class="opponent">Armed Dragon</span></span></a>
+                            <a href="/duelVideo/rezd-v-armed-dragon"><span class="inner-text">VS <span class="opponent">Armed Dragon</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -779,7 +810,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/vs-amazoness.jpg" alt="Red-Eyes Zombie Dragon vs Amazoness">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/rezd-v-amazoness"><span class="inner-text">VS <span class="opponent">Amazoness</span></span></a>
+                            <a href="/duelVideo/rezd-v-amazoness"><span class="inner-text">VS <span class="opponent">Amazoness</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -809,7 +840,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/vs-batteryman.jpg" alt="Red-Eyes Zombie Dragon vs Batteryman">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/gemini-v-batteryman"><span class="inner-text">VS <span class="opponent">Batteryman</span></span></a>
+                            <a href="/duelVideo/gemini-v-batteryman"><span class="inner-text">VS <span class="opponent">Batteryman</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -832,7 +863,7 @@
               <div id="collapseSpecialDuels" class="accordion-collapse collapse" aria-labelledby="special-duels" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
                   <p>
-                    Special Duels are played with special rules. The rules for these special duels require you to use a deck themed around your character.
+                    Special Duels are played with special rules. The special rules for these duels require you to use a deck themed around your character.
                   </p>
                   <div class="container-fluid">
                     <div class="row gy-2 gx-3 d-flex justify-content-center align-items-center">
@@ -842,7 +873,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/dark-necrofear-special-duel-1.jpg" alt="Dark Necrofear Special Duel 1">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/dark-necrofear-special-duel-1"><span class="inner-text">Dark Necrofear <span class="opponent">Special Duel 1</span></span></a>
+                            <a href="/duelVideo/dark-necrofear-special-duel-1"><span class="inner-text">Dark Necrofear <span class="opponent">Special Duel 1</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -852,7 +883,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/dark-necrofear-special-duel-2.jpg" alt="Dark Necrofear Special Duel 2">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/dark-necrofear-special-duel-2"><span class="inner-text">Dark Necrofear <span class="opponent">Special Duel 2</span></span></a>
+                            <a href="/duelVideo/dark-necrofear-special-duel-2"><span class="inner-text">Dark Necrofear <span class="opponent">Special Duel 2</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -882,7 +913,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/td-elementsaber-v-lunalights.jpg" alt="Turbo Duel: Elementsabers vs Lunalights">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/td-elementsaber-v-lunalights"><span class="inner-text">Elementsabers <span class="opponent">VS Lunalights</span></span></a>
+                            <a href="/duelVideo/td-elementsaber-v-lunalights"><span class="inner-text">Elementsabers <span class="opponent">VS Lunalights</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -892,7 +923,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/td-vendread-v-shiranui.jpg" alt="Turbo Duel: Vendread vs Shiranui">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/td-vendread-v-shiranui"><span class="inner-text">Vendreads <span class="opponent">VS Shiranui</span></span></a>
+                            <a href="/duelVideo/td-vendread-v-shiranui"><span class="inner-text">Vendreads <span class="opponent">VS Shiranui</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -922,7 +953,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/bakura-otk.jpg" alt="Bakura OTK">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/bakura-otk"><span class="inner-text">Bakura <span class="opponent">OTK</span></span></a>
+                            <a href="/duelVideo/bakura-otk"><span class="inner-text">Bakura <span class="opponent">OTK</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -932,7 +963,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/vs-six-samurai.jpg" alt="Beast Warriors vs Six Samurai">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/beast-warriors-v-six-samurai"><span class="inner-text">Beast Warriors <span class="opponent">VS Six Samurai</span></span></a>
+                            <a href="/duelVideo/beast-warriors-v-six-samurai"><span class="inner-text">Beast Warriors <span class="opponent">VS Six Samurai</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -942,7 +973,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/constellar-v-bewd.jpg" alt="Constellar vs Blue-Eyes White Dragon">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/constellar-v-bewd"><span class="inner-text">Constellar <span class="opponent">VS Blue-Eyes</span></span></a>
+                            <a href="/duelVideo/constellar-v-bewd"><span class="inner-text">Constellar <span class="opponent">VS Blue-Eyes</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -952,7 +983,7 @@
                             <img class="d-block full-wh" src="../images/bg/video-link/vs-rex-goodwin.jpg" alt="Earthbound Immortal Wiraqocha Rasca">
                           </picture>
                           <h4 class="video-link-header">
-                            <a href="/wiraqocha-rasca"><span class="inner-text">Earthbound Immortal <span class="opponent">Wiraqocha Rasca</span></span></a>
+                            <a href="/duelVideo/wiraqocha-rasca"><span class="inner-text">Earthbound Immortal <span class="opponent">Wiraqocha Rasca</span></span></a>
                           </h4>
                         </div>
                       </div>
@@ -1012,7 +1043,7 @@
           <a class="footer-link" href="https://jrz5220.github.io/felixlazo/contact.html" target="_blank"><i class="fas fa-envelope fs-4"></i></a>
           <a class="footer-link" href="https://github.com/" target="_blank"><i class="fab fa-github fs-4"></i></a>
         </div>
-        <p class="disclaimer mt-4 mb-0"><small>This website is not affiliated with the Konami Corporation. All information related to the Yu-Gi-Oh! trading card game and Yu-Gi-Oh! Duel Links is owned and copyrighted by Konmai.</small></p>
+        <p class="disclaimer mt-4 mb-0"><small>This website is not affiliated with the Konami Corporation. All information related to the Yu-Gi-Oh! trading card game and Yu-Gi-Oh! Duel Links is owned and copyrighted by Konami.</small></p>
       </div>
     </footer>
 
@@ -1021,5 +1052,6 @@
     <script src="https://cdn.sc.gl/videojs-hotkeys/0.2/videojs.hotkeys.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script type="text/javascript" src="../js/main.js"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
   </body>
 </html>
