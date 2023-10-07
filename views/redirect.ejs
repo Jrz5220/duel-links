@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title><%= pageTitle %></title>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta name="author" content="Felix Lazo">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Kanit&family=PT+Sans+Caption&display=swap" rel="stylesheet">
+        <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/favicon_io/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon_io//favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon_io//favicon-16x16.png">
+        <link rel="manifest" href="images/favicon/favicon_io//site.webmanifest">
+        <link rel="stylesheet" href="/../css/main.css">
+        <style>
+            .colored-bg {
+                background: -webkit-linear-gradient(#212529 25%, #ff9019);
+                background: -o-linear-gradient(#212529 25%, #ff9019);
+                background: linear-gradient(#212529 25%, #ff9019);
+            }
+            .page-not-found-header {
+                font-size: 2rem;
+            }
+            .page-not-found-subheader a {
+                color: #0fbcf9;
+                text-decoration: underline;
+            }
+            .main-btn:before {
+                transition: 1s;
+            }
+            .bg-pattern-container {
+                position: absolute;
+                top: unset;     /* top: 0; in main.css */
+                bottom: -5rem;
+            }
+            .bg-pattern-row:first-of-type .square-pattern {
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.05) 100%);
+                border-top: none;
+                border-left: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="position-relative overflow-hidden full-wh colored-bg">
+            <div class="bg-pattern-container" aria-hidden="true">
+                <div class="bg-pattern-row">
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                </div>
+                <div class="bg-pattern-row">
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                    <div class="square-pattern"></div>
+                </div>
+            </div>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+                <span class="navbar-brand fs-4">Duel Links Replays</span>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div id="navbarSupportedContent" class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item px-3"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item px-3"><a class="nav-link" href="/#decks">Decks</a></li>
+                </ul>
+                </div>
+            </nav>
+            <main class="text-center py-5 px-1">
+                <header>
+                    <% if(containsUserData){ %>
+                    <h2 class="page-not-found-header duel-links-header pb-3"><%= displayUserData %></h2>
+                    <% } else { %>
+                    <h2 class="page-not-found-header duel-links-header pb-3"><%= theHeader %></h2>
+                    <% } %>
+                </header>
+                <p class="page-not-found-subheader"><%= theMessage %></p>   <!-- add max-width so paragraph doesn't stretch to full screen -->
+                <div class="return-home-links d-flex justify-content-center align-items-center pt-3">
+                    <a class="main-btn px-3 py-2 me-4" href="/">Home</a>
+                    <% if(hasAnotherLink) { %>
+                        <a class="main-btn px-3 py-2 me-4" href="<%= theLink %>"><%= linkText %></a>
+                    <% } %>
+                </div>
+            </main>
+        </div>
+        <footer class="the-footer p-5">
+            <div class="container">
+              <div class="footer-links d-flex justify-content-evenly">
+                <a class="footer-link" href="https://store.steampowered.com/app/601510/YuGiOh_Duel_Links/" target="_blank"><i class="fab fa-steam fs-4"></i></a>
+                <a class="footer-link" href="https://jrz5220.github.io/felixlazo/contact.html" target="_blank"><i class="fas fa-envelope fs-4"></i></a>
+                <a class="footer-link" href="https://github.com/" target="_blank"><i class="fab fa-github fs-4"></i></a>
+              </div>
+              <p class="disclaimer mt-4 mb-0"><small>This website is not affiliated with the Konami Corporation. All information related to the Yu-Gi-Oh! trading card game and Yu-Gi-Oh! Duel Links is owned and copyrighted by Konami.</small></p>
+            </div>
+        </footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    </body>
+</html>

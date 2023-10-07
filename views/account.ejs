@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="author" content="Felix Lazo">
+    <meta name="description" content="View competitive duel videos from the mobile game Yu-Gi-Oh! Duel Links. The replay videos include duels from gold rank through king of games, as well as the KC cup and special events.">
+    <title>Your Account</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Kanit&family=PT+Sans+Caption&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="../images/favicon/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon/favicon_io//favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../images/favicon/favicon_io//favicon-16x16.png">
+    <link rel="manifest" href="../images/favicon/favicon_io//site.webmanifest">
+    <link rel="stylesheet" href="../css/main.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+      <span class="navbar-brand fs-4">Duel Links Replays</span>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="navbarSupportedContent" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item px-3"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item px-3"><a class="nav-link" href="/logout">Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="grid-container account-page-grid">
+      <header class="accountHeader grid-item d-flex justify-content-center align-items-center justify-content-md-start px-md-4">
+        <div class="headerContent d-flex flex-column justify-content-center align-items-center flex-md-row justify-content-md-start">
+          <div class="accountAvatar me-md-4">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div class="username">
+            <%= username %>
+          </div>
+        </div>
+      </header>
+      <div class="tabsContainer carousel-indicators for-account-page justify-content-between flex-md-column justify-content-md-start align-items-md-start grid-item">
+        <% if(hasServerMsg) { %>
+          <button type="button" data-bs-target="#tabsContentCarousel" data-bs-slide-to="0" class="carousel-tab d-block" aria-label="Slide 1">Favorites</button>
+          <button type="button" data-bs-target="#tabsContentCarousel" data-bs-slide-to="1" class="carousel-tab d-block" aria-label="Slide 2">History</button>
+          <button type="button" data-bs-target="#tabsContentCarousel" data-bs-slide-to="2" class="carousel-tab d-block active" aria-current="true" aria-label="Slide 3">Settings</button>
+        <% } else { %>
+        <button type="button" data-bs-target="#tabsContentCarousel" data-bs-slide-to="0" class="carousel-tab d-block active" aria-current="true" aria-label="Slide 1">Favorites</button>
+        <button type="button" data-bs-target="#tabsContentCarousel" data-bs-slide-to="1" class="carousel-tab d-block" aria-label="Slide 2">History</button>
+        <button type="button" data-bs-target="#tabsContentCarousel" data-bs-slide-to="2" class="carousel-tab d-block" aria-label="Slide 3">Settings</button>
+        <% } %>
+      </div>
+      <div id="tabsContentCarousel" class="tabsContentAccount carousel slide grid-item" data-bs-ride="true">
+        <div class="carousel-inner">
+          <% if(hasServerMsg) { %>
+          <div class="carousel-item p-4">
+          <% } else { %>
+          <div class="carousel-item active p-2 py-4 p-md-4">
+          <% } %>
+          <% if(hasFavVideos) { %>
+            <h2 class="text-center p-4">Favorites</h2>
+            <form action="/account/<%= username %>/removeFavVideos" method="post" class="deleteFavVideosForm">
+              <input type="hidden" name="username" value="<%= username %>">
+              <fieldset>
+                <legend class="form-legend">Delete from favorites</legend>
+                <% for(let i = 0; i < favVidTitles.length; i++) { %>
+                <div class="videoCheckboxContainer d-flex justify-content-start align-items-center p-2 py-3 p-md-3">
+                  <input type="checkbox" name="videoToRemove" id="<%= favVidTitles[i] %>" value="<%= favVidTitles[i] %>">
+                  <label for="<%= favVidTitles[i] %>" class="d-flex justify-content-md-start align-items-center ms-3 mx-md-4">
+                    <a href="/duelVideo/<%= favDuelNames[i] %>" class="d-block saved-video-link mb-3 mb-md-0 me-md-3" data-bs-toggle="tooltip" data-bs-placement="top" title="Watch Video">
+                      <picture class="video-poster-container">
+                        <img src="../images/video-posters/<%= favDuelNames[i] %>.JPG" alt="<%= favVidTitles[i] %>">  <!-- default -->
+                      </picture>
+                      <div class="play-video d-flex justify-content-center align-items-center">
+                        <i class="fas fa-play"></i>
+                      </div>
+                    </a>
+                    <h3 class="saved-video-header m-0"><%= favVidTitles[i] %></h3>
+                  </label>
+                </div>
+                <% } %>
+                <button type="submit" class="delete-video-btn px-3 py-2 my-3">Delete <i class="fas fa-trash-alt delete-icon ms-3"></i></button>
+              </fieldset>
+            </form>
+          <% } else { %>
+            <p><small class="text-muted">You have no favorites</small></p>
+          <% } %>
+          </div>
+          <div class="carousel-item p-2 py-4 p-md-4">
+            <% if(hasHistVideos) { %>
+            <h2 class="text-center p-4">History</h2>
+            <form action="/account/<%= username %>/removeHistoryVideos" method="post" class="deleteHistVideosForm">
+              <input type="hidden" name="username" value="<%= username %>">
+              <fieldset>
+                <legend class="form-legend">Delete from history</legend>
+                <% for(let i = 0; i < histVidTitles.length; i++) { %>
+                <div class="videoCheckboxContainer d-flex justify-content-start align-items-center p-2 py-3 p-md-3">
+                  <input type="checkbox" name="videoToRemove" id="<%= histVidTitles[i] %>" value="<%= histVidTitles[i] %>">
+                  <label for="<%= histVidTitles[i] %>" class="d-flex flex-column flex-md-row justify-content-start align-items-center ms-3 mx-md-4">
+                    <a href="/duelVideo/<%= histDuelNames[i] %>" class="d-block saved-video-link mb-3 mb-md-0 me-md-3" data-bs-toggle="tooltip" data-bs-placement="top" title="Watch Video">
+                      <picture class="video-poster-container">
+                        <img src="../images/video-posters/<%= histDuelNames[i] %>.JPG" alt="<%= histVidTitles[i] %>">
+                      </picture>
+                      <div class="play-video d-flex justify-content-center align-items-center">
+                        <i class="fas fa-play"></i>
+                      </div>
+                    </a>
+                    <h3 class="saved-video-header m-0"><%= histVidTitles[i] %></h3>
+                  </label>
+                </div>
+                <% } %>
+                <button type="submit" class="delete-video-btn px-3 py-2 my-3">Delete <i class="fas fa-trash-alt delete-icon ms-3"></i></button>
+              </fieldset>
+            </form>
+            <% } else { %>
+              <p><small class="text-muted">You have no videos in your history</small></p>
+            <% } %>
+          </div>
+          <% if(hasServerMsg) { %>
+          <div class="carousel-item active p-4">
+          <% } else { %>
+          <div class="carousel-item p-4">
+          <% } %>
+            <h2 class="text-center p-4">Account Settings</h2>
+            <div class="d-flex flex-column align-items-center justify-content-center flex-md-row">
+              <div class="settings mb-5 mb-md-0 me-md-5">
+                <form id="changePasswordForm" action="/account/<%= username %>/changePassword" method="post">
+                  <input type="hidden" name="username" value="<%= username %>">
+                  <% if(hasNewPwdMsg) { %>
+                    <p id="serverPwdErr" class="small" style="color: #aa0000; max-width: 16rem;"><%= newPwdMsg %></p>
+                  <% } %>
+                  <p class="passwordWarning" role="alert" style="color: #aa0000; max-width: 16rem;"></p>
+                  <fieldset class="updateSettingsFields">
+                    <legend class="h3 mb-3">Change Password</legend>
+                    <label for="currentPwd" class="d-block">Current Password: </label>
+                    <input type="password" id="currentPwd" class="d-block mb-4" name="currentPwd" required>
+                    <label for="newPwd" class="d-block">New Password: </label>
+                    <input type="password" id="newPwd" class="d-block mb-4" name="newPwd" minlength="8" maxlength="16" required>
+                    <label for="confirmNewPwd" class="d-block">Confirm New Password: </label>
+                    <input type="password" id="confirmNewPwd" class="d-block mb-4" name="confirmNewPwd" minlength="8" maxlength="16" required>
+                  </fieldset>
+                  <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+              </div>
+              <div class="settings align-self-md-start ms-md-5">
+                <div class="current-email mb-4">
+                  <h3 class="mb-3">Email</h3>
+                  <p><%= userEmail %></p>
+                </div>
+                <form id="changeEmailForm" action="/account/<%= username %>/changeEmail" method="post">
+                  <input type="hidden" name="currentEmail" value="<%= userEmail %>">
+                  <% if(invalidNewEmail) { %>
+                    <p id="serverEmailErr" class="small" role="alert" style="color: #aa0000;"><%= newEmailErrMsg %></p>
+                  <% } %>
+                  <p class="emailWarning" role="alert" style="color: #aa0000; max-width: 16rem;"></p>
+                  <fieldset class="updateSettingsFields">
+                    <legend class="h3 mb-3">Change Email</legend>
+                    <label for="newEmail" class="d-block">New Email:</label>
+                    <input type="email" id="newEmail" class="d-block mb-4" name="newEmail" required>
+                  </fieldset>
+                  <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/550ddecd5b.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
+    <script type="text/javascript">
+      const carouselButtons = document.getElementsByClassName("carousel-tab");
+      for(let i = 0; i < carouselButtons.length; i++) {
+        let carouselButton = carouselButtons[i];
+        carouselButton.addEventListener("click", function(event) {
+          event.stopPropagation();
+          if(!carouselButton.hasAttribute("aria-current")) {
+            // remove aria-current attribute and active class from the current active button
+            for(let i = 0; i < carouselButtons.length; i++) {
+              if(carouselButtons[i].hasAttribute("aria-current")) {
+                carouselButtons[i].removeAttribute("aria-current");
+                carouselButtons[i].classList.remove("active");
+              }
+            }
+            // identify this button as the current active button when clicked
+            carouselButton.setAttribute("aria-current", "true");
+            carouselButton.classList.add("active");
+          }
+        });
+      }
+      let deleteVidBtn = document.getElementsByClassName("delete-video-btn");
+      for(let i = 0; i < deleteVidBtn.length; i++) {
+        deleteVidBtn[i].addEventListener("click", function(event) {
+          let deleteVid = confirm("Are You sure you want to delete these videos?");
+          if(!deleteVid) {
+            event.preventDefault();
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

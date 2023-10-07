@@ -11,33 +11,63 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Kanit&family=PT+Sans+Caption&display=swap" rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/favicon_io/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon_io//favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon_io//favicon-16x16.png">
-    <link rel="manifest" href="images/favicon/favicon_io//site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="../images/favicon/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon/favicon_io//favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../images/favicon/favicon_io//favicon-16x16.png">
+    <link rel="manifest" href="../images/favicon/favicon_io//site.webmanifest">
     <link rel="stylesheet" href="../css/main.css">
   </head>
   <body>
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-      <span class="navbar-brand fs-4">Duel Links Replays</span>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div id="navbarSupportedContent" class="collapse navbar-collapse">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item px-3"><a class="nav-link" href="/">Home</a></li>
-          <li class="nav-item px-3"><a class="nav-link" href="/#decks">Decks</a></li>
-        </ul>
-      </div>
-    </nav>
+    <div class="navbar-container navbar-dark bg-dark px-3">
+      <nav class="main-navbar navbar navbar-expand-lg">
+        <span class="navbar-brand fs-4">Duel Links Replays</span>
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbarSupportedContent" class="navbar-collapse collapse">
+          <ul class="navbar-nav flex-wrap justify-content-end ms-auto" style="flex-wrap:wrap;justify-content:end;">
+            <li class="nav-item px-3"><a href="/" class="nav-link">Home</a></li>
+            <li class="nav-item px-3"><a href="/#decks" class="nav-link">Decks</a></li>
+            <% if(isLoggedIn) { %>
+              <li class="nav-item px-3"><a href="/account" class="nav-link">Account</a></li>
+            <% } else { %>
+              <li class="nav-item px-3 d-flex align-items-center">
+                <button type="button" class="nav-link login-btn" data-bs-toggle="collapse" data-bs-target="#loginFormListItem" aria-expanded="false" aria-controls="loginFormListItem">Sign In</button>
+              </li>
+              <li id="loginFormListItem" class="nav-item px-3 py-1 login-item collapse">
+                <div class="d-flex flex-column align-items-lg-end">
+                  <form id="loginForm" class="card card-body login-form bg-light" action="/sign-in" method="post">
+                    <% if(hasServerMsg) { %>
+                      <p id="serverLoginErr" class="small" style="color: #aa0000;"><%= theMsg %></p>
+                    <% } %>
+                    <div id="loginWarning" class="small" role="alert" aria-atomic="true" style="color: #aa0000;"></div>
+                    <label for="username" class="d-block">Username</label>
+                    <input type="text" id="username" class="d-block mb-3 login-input" name="username" required>
+                    <label for="password" class="d-block">Password</label>
+                    <input type="password" id="password" class="d-block mb-1 login-input" name="password" required>
+                    <div class="mb-3">
+                      <a href="/forgotPassword" class="text-primary forgot-pwd-link">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary" name="button">Sign In</button>
+                  </form>
+                  <div class="mt-2">
+                    <a href="/registerPage" class="create-account-link">Create Account</a>
+                  </div>
+                </div>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+      </nav>
+    </div>
 
     <!-- VIDEO -->
-    <section id="video-section" class="container-fluid duel-video-container light-bg py-5">
-      <h1 class="display-5 mb-5 text-center"><%= duel.title %></h1>
+    <section id="video_section" class="container-fluid duel-video-container light-bg py-5">
+      <h1 id="videoTitle" class="display-5 mb-5 text-center"><%= duel.title %></h1>
       <div id="<%= duel.duelName %>" class="video-wrapper mx-auto">
         <video id="video-player" class="video-js vjs-big-play-centered">
-          <source src="https://elasticbeanstalk-us-east-1-801833297134.s3.amazonaws.com/duel_links_videos/<%= collection %>/<%= duel.duelName %>.mp4" type="video/mp4">
+          <source id="video-link" src="https://elasticbeanstalk-us-east-1-801833297134.s3.amazonaws.com/duel_links_videos/<%= collection %>/<%= duel.duelName %>.mp4" type="video/mp4">
           <source src="https://" type="video/webm">
           <p class="vjs-no-js">
             To view this video please enable JavaScript, and consider upgrading to a web browser that
@@ -45,8 +75,12 @@
           </p>
         </video>
       </div>
-      <div class="video-description mx-auto">
-        <p class="upload-date"><%= duel.uploadDate %></p>
+      <div class="video-description d-flex justify-content-between flex-nowrap mx-auto">
+        <p class="upload-date ms-sm-3"><%= duel.uploadDate %></p>
+        <button type="button" id="favBtn" class="fav-btn me-sm-3 position-relative <%= isFavorite %>" name="favBtn" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add to favorites" aria-label="Add video to favorites">
+          <i class="fas fa-heart d-flex justify-content-end align-items-center"></i>
+          <p class="accessibleName forScreenReader text-end">Add to favorites</p>
+        </button>
       </div>
     </section>
 
@@ -55,16 +89,18 @@
       <h2 class="mb-5 text-center">Cards Used In Duel</h2>
       <div id="cards-used-container" class="cards-grid-container container">
         <div id="cards-used-row" class="row">
+          <!-- display all cards used -->
           <% for(var i = 0; i < numOfCards; i++) { %>
           <div class="col-6 col-sm-4 col-lg-3 col-xl-2 mb-5">
             <div class="yugioh-card-wrapper full-wh">
-              <div id="<%= duel.cards[i].htmlId %>" class="yugioh-card full-wh">
+              <div id="<%= duel.cards[i].htmlId %>" class="yugioh-card full-wh clickable">
                 <picture class="card-picture <%= duel.cards[i].type %> d-block full-wh">
                   <img class="d-block" src="../images/cards/<%= duel.cards[i].imgDir %>/<%= duel.cards[i].htmlId %>.jpg" alt="<%= duel.cards[i].name %>">
                 </picture>
               </div>
             </div>
           </div>
+          <!-- enlarged card (visible when one of the above cards is clicked) -->
           <div id="expand-<%= duel.cards[i].htmlId %>" class="card-expanded container light-bg pt-5 pb-4 ps-4 pe-4">
             <button id="close-<%= duel.cards[i].htmlId %>" class="close-expanded-card-btn" type="button">
               <i class="top-element d-block far fa-times-circle"></i>
@@ -76,37 +112,29 @@
                 </picture>
               </div>
               <div class="col-md-8">
-                  <!-- name -->
                   <h3 class="top-element mb-3"><%= duel.cards[i].name %></h3>
                   <% if(isMonster[i]) { %>
-                  <!-- level -->
                   <div class="monster-level card-property top-element mb-3">
                     <span class="property"><i class="fas fa-star property-icon"></i> <span class="fw-bold">Level:</span></span> <%= duel.cards[i].level %>
                   </div>
-                  <!-- attribute -->
                   <div class="monster-attribute card-property top-element mb-3">
                     <span class="property"><i class="fas fa-bookmark property-icon"></i> <span class="fw-bold">Attribute:</span></span> <%= duel.cards[i].attribute %>
                   </div>
-                  <!-- type (dragon icon) -->
                   <div class="monster-type card-property top-element mb-3">
                     <span class="property"><i class="fas fa-dragon property-icon"></i> <span class="fw-bold">Type:</span></span> <%= duel.cards[i].type %>
                   </div>
                   <% } else { %>
-                    <!-- type (bookmark icon) -->
                     <div class="spell-trap-type card-property top-element mb-3">
                       <span class="property"><i class="fas fa-bookmark property-icon"></i> <span class="fw-bold">Type:</span></span> <%= duel.cards[i].type %>
                     </div>
                   <% } %>
-                  <!-- text-box -->
                   <div class="card-textbox top-element p-2 mb-3">
                     <% if(isMonster[i]) { %>
-                      <!-- summon requirement -->
                       <div class="summon-req pb-1"><%= duel.cards[i].summonRequirement %></div>
                     <% } %>
                     <p class="mb-0"><%= duel.cards[i].effect %></p>
                   </div>
                   <% if(isMonster[i]) { %>
-                  <!-- atk/def -->
                   <div class="monster-stats top-element d-flex justify-content-between justify-content-sm-around">
                     <div class="atk">
                       <i class="fas fa-meteor property-icon"></i> <span class="fw-bold">ATK:</span> <%= duel.cards[i].atk %>
@@ -117,10 +145,9 @@
                   </div>
                   <% } %>
               </div>
-            </div>  <!-- end row -->
-          </div>  <!-- end card-expanded container -->
+            </div>
+          </div>
           <% } %>
-          <div id="blur-cards" class="transparent-cover"></div>
         </div>
         <button type="button" class="skill-btn btn btn-dark btn-lg" data-bs-toggle="collapse" data-bs-target="#skill" aria-expanded="false" aria-controls="skill">
           Skill: <%= duel.skill %>
@@ -157,7 +184,7 @@
           <a class="footer-link" href="https://jrz5220.github.io/felixlazo/contact.html" target="_blank"><i class="fas fa-envelope fs-4"></i></a>
           <a class="footer-link" href="https://github.com/" target="_blank"><i class="fab fa-github fs-4"></i></a>
         </div>
-        <p class="disclaimer mt-4 mb-0"><small>This website is not affiliated with the Konami Corporation. All information related to the Yu-Gi-Oh! trading card game and the Yu-Gi-Oh! Duel Links digital game is owned and copyrighted by Konmai.</small></p>
+        <p class="disclaimer mt-4 mb-0"><small>This website is not affiliated with the Konami Corporation. All information related to the Yu-Gi-Oh! trading card game and Yu-Gi-Oh! Duel Links is owned and copyrighted by Konmai.</small></p>
       </div>
     </footer>
 
@@ -166,6 +193,7 @@
     <script src="https://cdn.sc.gl/videojs-hotkeys/0.2/videojs.hotkeys.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
     <script type="text/javascript" src="../js/duel-video-page.js"></script>
   </body>
 </html>

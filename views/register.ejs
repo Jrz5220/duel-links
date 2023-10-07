@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="author" content="Felix Lazo">
+    <meta name="description" content="Sign up to get updates on new Yu-Gi-Oh! Duel Links videos.">
+    <title>Register Account</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Kanit&family=PT+Sans+Caption&display=swap" rel="stylesheet">
+    <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon_io//favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon_io//favicon-16x16.png">
+    <link rel="manifest" href="images/favicon/favicon_io//site.webmanifest">
+    <link rel="stylesheet" href="../css/main.css">
+    <style>
+      .body-content {
+        overflow: scroll;
+      }
+      .colored-bg {
+        background: -webkit-linear-gradient(#212529 25%, #ff9019);
+        background: -o-linear-gradient(#212529 25%, #ff9019);
+        background: linear-gradient(#212529 25%, #ff9019);
+      }
+      .bg-pattern-container {
+        position: absolute;
+        top: unset;     /* top: 0; in main.css */
+        bottom: -5rem;
+      }
+      .bg-pattern-row:first-of-type .square-pattern {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.05) 100%);
+        border-top: none;
+        border-left: none;
+      }
+      @media (min-width: 767px) {
+        .body-content {
+          overflow: hidden;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="position-relative colored-bg full-wh body-content">
+      <div class="bg-pattern-container" aria-hidden="true">
+        <div class="bg-pattern-row">
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+        </div>
+        <div class="bg-pattern-row">
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+            <div class="square-pattern"></div>
+        </div>
+      </div>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+        <span class="navbar-brand fs-4">Duel Links Replays</span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbarSupportedContent" class="collapse navbar-collapse">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item px-3"><a href="/" class="nav-link">Home</a></li>
+            <li class="nav-item px-3"><a href="/#decks" class="nav-link">Decks</a></li>
+          </ul>
+        </div>
+      </nav>
+      <main class="d-flex justify-content-center align-items-center position-relative register-section">
+        <div class="d-flex flex-column flex-md-row justify-content-center align-items-center register-content-wrap" style="max-width: 1200px;">
+          <article class="benefits align-self-stretch p-5">
+            <h1 class="mb-4">Create An Account</h1>
+            <p class="d-flex justify-content-start align-items-center mb-4"><i class="fas fa-thumbs-up"></i> Like videos!</p>
+            <p class="d-flex justify-content-start align-items-center mb-4"><i class="fas fa-star"></i> Save your Favorite Duels!</p>
+            <p class="d-flex justify-content-start align-items-center"><i class="fas fa-paper-plane"></i> Get notified when new duels are uploaded!</p>
+          </article>
+          <div class="register-form-wrap p-3">
+            <form action="/registerAccount" method="post" id="registerForm" class="d-flex flex-column align-items-start p-3">
+              <% if(hasServerMsg) { %>
+                <p id="serverMsg" style="color: #fff; font-size: 1rem; max-width: 29rem; border: 2px solid red; padding: 0.5rem;"><i class="fas fa-times-circle pe-2" aria-hidden="true"></i> <%= theMsg %></p>
+              <% } %>
+              <div class="userInputWarning" role="alert"></div>
+              <fieldset>
+                <legend>Register</legend>
+                <label class="regsiter-account-label d-flex align-items-end mb-3">
+                  <span class="input-label me-2">Username:</span>
+                  <input type="text" id="username" name="username" required>
+                </label>
+                <label class="regsiter-account-label d-flex align-items-end mb-3">
+                  <span class="input-label me-2">Password:</span>
+                  <input type="password" id="password" name="password" minlength="8" maxlength="16" required>
+                </label>
+                <label class="regsiter-account-label d-flex align-items-end mb-3">
+                  <span class="input-label me-2">Confirm Password:</span>
+                  <input type="password" id="confirm-pwd" name="confirmPwd" minlength="8" maxlength="16" required>
+                </label>
+                <label class="regsiter-account-label d-flex align-items-end mb-3">
+                  <span class="input-label me-2">Email:</span>
+                  <input type="email" id="email" name="email" required>
+                </label>
+              </fieldset>
+              <button type="submit" class="btn btn-primary mt-2" name="registerBtn">Register</button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="https://kit.fontawesome.com/550ddecd5b.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
+  </body>
+</html>
