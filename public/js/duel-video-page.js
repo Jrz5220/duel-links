@@ -65,12 +65,10 @@ favBtn.on("click", function(e) {
     favBtn.toggleClass("isFavorite");
     if(favBtn.hasClass("isFavorite")) {
       videoData.addToFavorites = true;
-      console.log("addToFavs: " + videoData.addToFavorites);
     }
     fetch("/updateFavorites", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(videoData)}).then(res => {
       return res.json();
     }).then(json => {
-      console.log("json => " + JSON.stringify(json));
       // update favorites button
       if(json.addedVideo) {
         favBtn.attr({
