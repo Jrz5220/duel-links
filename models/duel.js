@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const mongoose = require("mongoose");
 
 /*
@@ -52,3 +53,6 @@ module.exports = {
     turboDuel: mongoose.model("TurboDuel", duelSchema),
     otherDuel: mongoose.model("OtherDuel", duelSchema)
 }
+=======
+
+>>>>>>> 63cebaf1bb70a9e970897b3fbc3ade01accdf72a

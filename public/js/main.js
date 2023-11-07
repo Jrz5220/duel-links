@@ -1,6 +1,5 @@
 const validatePassword = function(pwd, confirmPwd) {
   const pwdChecker = new RegExp(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,16}$/);
-  console.log("checking passwords: " + pwd + " + " + confirmPwd);
   if((/\s/).test(pwd))
     throw new Error("Password cannot contain spaces");
   if(pwd.length < 8 || pwd.length > 16)
@@ -9,7 +8,6 @@ const validatePassword = function(pwd, confirmPwd) {
     throw new Error("Password must contain at least one lowercase, uppercase, number, and special character");
   if(pwd.localeCompare(confirmPwd, "en") !== 0)
     throw new Error("Passwords must match");
-  console.log("passwords are valid");
 }
 
 if(document.getElementById("loginForm") != undefined && document.getElementById("loginForm") !== null) {
@@ -25,12 +23,9 @@ if(document.getElementById("loginForm") != undefined && document.getElementById(
       username: username,
       password: password
     }
-    console.log("login attempt: " + username);
     fetch("/authenticateLogin", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(userLogin)}).then(res => {
-      console.log("/authenticateLogin res: " + res.status);
       return res.json();
     }).then(json => {
-      console.log("json response: " + JSON.stringify(json));
       loginWarning.innerHTML = "";  // clear contents of the alert to inject a new message
       if(serverLoginErr !== null)
           serverLoginErr.remove();
@@ -98,7 +93,6 @@ if(document.getElementById("registerForm") !== undefined && document.getElementB
           userInputWarning.innerHTML = `<p class="warningWithBorder"><i class="fas fa-times-circle pe-2" aria-hidden="true"></i> Could not register account due to a server error. Please try again later.</p>`;
           return;
         }
-        console.log("register new user");
         form.submit();
       }).catch(error => {
         document.getElementsByClassName("userInputWarning")[0].innerHTML = "";
@@ -112,7 +106,6 @@ if(document.getElementById("resetPwdForm") !== undefined && document.getElementB
   const form = document.getElementById("resetPwdForm");
   form.addEventListener("submit", function(event) {
     // event.preventDefault();
-    console.log("reset pwd form submitted");
     const formData = new FormData(form);
     const newPwd = formData.get("newPwd");
     const confirmNewPwd = formData.get("confirmNewPwd");
@@ -128,7 +121,6 @@ if(document.getElementById("resetPwdForm") !== undefined && document.getElementB
       passwordWarning.innerHTML = `<i class="fas fa-times-circle pe-1" aria-hidden="true"></i> ${error.message}`;
       return;
     }
-    console.log("valid new password submitted");
   });
 }
 
@@ -148,7 +140,6 @@ if(document.getElementById("changePasswordForm") !== undefined && document.getEl
           try {
             validatePassword(formData.get("newPwd"), formData.get("confirmNewPwd"));
           } catch(error) {
-            console.log("caught error while validating password");
             if(serverPwdErr !== null) {
               serverPwdErr.remove();
             }
@@ -162,7 +153,6 @@ if(document.getElementById("changePasswordForm") !== undefined && document.getEl
             passwordWarning.innerHTML = `<i class="fas fa-times-circle pe-1" aria-hidden="true"></i> ${error.message}`;
             return;
           }
-          console.log("submitting new password form");
           form.submit();
         } else if(res.status === 400) {
           if(serverPwdErr !== null) {
