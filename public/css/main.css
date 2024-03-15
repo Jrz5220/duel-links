@@ -588,7 +588,7 @@ a {
   background-color: #fff;
 }
 .form-legend {
-  color: var(--light-blue);
+  color: #0900b2;
   border-bottom: 2px solid var(--light-blue);
 }
 .saved-video-link {
