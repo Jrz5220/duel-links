@@ -134,56 +134,43 @@ if(document.getElementById("changePasswordForm") !== undefined && document.getEl
     const emailWarning = document.getElementsByClassName("emailWarning")[0];
     const serverPwdErr = document.getElementById("serverPwdErr");
     const serverEmailErr = document.getElementById("serverEmailErr");
+    const clearErrorMessages = function() {
+      if(serverPwdErr !== null) {
+        serverPwdErr.remove();
+      }
+      if(serverEmailErr !== null) {
+        serverEmailErr.remove();
+      }
+      if(emailWarning.innerHTML) {
+        emailWarning.innerHTML = "";
+      }
+      passwordWarning.innerHTML = "";
+      passwordWarning.classList.remove("position-absolute");
+      passwordWarning.classList.add("position-relative");
+    };
     fetch("/authenticatePassword", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({username: formData.get("username"), password: currentPwd})})
       .then(function(res) {
         if(res.ok) {
           try {
             validatePassword(formData.get("newPwd"), formData.get("confirmNewPwd"));
           } catch(error) {
-            if(serverPwdErr !== null) {
-              serverPwdErr.remove();
-            }
-            if(serverEmailErr !== null) {
-              serverEmailErr.remove();
-            }
-            if(emailWarning.innerHTML) {
-              emailWarning.innerHTML = "";
-            }
-            passwordWarning.innerHTML = "";
+            clearErrorMessages();
             passwordWarning.innerHTML = `<i class="fas fa-times-circle pe-1" aria-hidden="true"></i> ${error.message}`;
             return;
           }
           form.submit();
         } else if(res.status === 400) {
-          if(serverPwdErr !== null) {
-            serverPwdErr.remove();
-          }
-          if(serverEmailErr !== null) {
-            serverEmailErr.remove();
-          }
-          if(emailWarning.innerHTML) {
-            emailWarning.innerHTML = "";
-          }
-          passwordWarning.innerHTML = "";
+          clearErrorMessages();
           passwordWarning.innerHTML = `<i class="fas fa-times-circle pe-1" aria-hidden="true"></i> Your current password is incorrect`;
           return;
         } else if(res.status === 500) {
-          if(serverPwdErr !== null) {
-            serverPwdErr.remove();
-          }
-          if(serverEmailErr !== null) {
-            serverEmailErr.remove();
-          }
-          if(emailWarning.innerHTML) {
-            emailWarning.innerHTML = "";
-          }
-          passwordWarning.innerHTML = "";
+          clearErrorMessages();
           passwordWarning.innerHTML = `<i class="fas fa-times-circle pe-1" aria-hidden="true"></i> A server error prevented your account from being updated. Please try again later.`;
           return;
         }
       }).catch(error => {
-        document.getElementsByClassName("passwordWarning")[0].innerHTML = "";
-        document.getElementsByClassName("passwordWarning")[0].innerHTML = `<i class="fas fa-times-circle pe-1" aria-hidden="true"></i> ${error.message}`;
+        clearErrorMessages();
+        passwordWarning.innerHTML = `<i class="fas fa-times-circle pe-1" aria-hidden="true"></i> ${error.message}`;
         return;
       });
   });
