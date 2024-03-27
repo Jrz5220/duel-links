@@ -759,7 +759,11 @@ input[type="checkbox"]:focus {
   REGISTER PAGE
 ================================
 */
+.register-content-wrap {
+  box-shadow: 0 0 2rem #000;
+}
 .benefits {
+  border: 5px solid #000;
   --s: 37px; /* control the size */ 
   --c:#0000,#1e272e .5deg 119.5deg,#0000 120deg;
   --g1:conic-gradient(from  60deg at 56.25% calc(425%/6),var(--c));
