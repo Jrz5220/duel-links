@@ -89,6 +89,10 @@ a {
   color: var(--light-blue);
   font-size: 1rem;
 }
+.create-account-link:hover,
+.create-account-link:focus {
+  color: var(--main-bg-color);
+}
 
 /*
 ================================
@@ -474,13 +478,13 @@ a {
   top: 1rem;
   right: 0;
   margin-right: 1.25rem;
+  transform: scale(1);
   transition: font-size 250ms, color 250ms, transform 250ms;
 }
 .close-expanded-card-btn:hover,
 .close-expanded-card-btn:focus {
   color: #b10101;
-  font-size: 2.5rem;
-  transform: rotate(180deg);
+  transform: scale(1.2) rotate(180deg);
 }
 .expanded-card-img {
   max-width: 337px;
