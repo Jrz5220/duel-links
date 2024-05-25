@@ -173,3 +173,13 @@ router.get("/account/:user", function(req, res) {
     res.redirect("/");
   }
 });
+
+router.get("/forgotPassword", function(req, res) {
+  let ariaInvalid = false;
+  if(req.app.get("hasServerMsg") === true)
+    ariaInvalid = true;
+  res.render("forgotPassword", {hasServerMsg: req.app.get("hasServerMsg"), theMsg: req.app.get("theMsg"), ariaInvalid: ariaInvalid});
+  req.app.disable("hasServerMsg");
+});
+
+// get+post /requestPasswordReset
