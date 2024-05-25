@@ -68,3 +68,108 @@ router.param("user", function(req, res, next, id) {
     res.redirect("/");
   }
 });
+
+
+// ----------------- ROUTES -----------------
+router.get("/", function(req, res) {
+  res.render("index", {hasServerMsg: req.app.get("hasServerMsg"), theMsg: req.app.get("theMsg"), isLoggedIn: req.isAuthenticated()});
+  req.app.disable("hasServerMsg");
+});
+
+router.get("/sign-in", function(req, res) {
+  try {
+    setServerMessage(req.app, "Please sign in");
+    res.redirect("/");
+  } catch(error) {
+    res.status(500).json({success: false, error: error.name, message: genericErrorMsg});
+  }
+});
+
+router.post("/sign-in", passport.authenticate("local", {failureRedirect: "/loginfail", failureMessage: true}), function(req, res) {
+  res.redirect("/account/" + req.body.username);
+});
+
+router.get("/loginfail", function(req, res) {
+  try {
+    setServerMessage(req.app, "invalid username/password");
+    if(req.app.get("maxLoginAttemptsReached"))
+      setServerMessage(req.app, "You have reached the maximum login attempts and have been temporarily locked out");
+  } catch(error) {
+    res.status(500).json({success: false, error: error.name, message: genericErrorMsg});
+  }
+  const backURL = req.header('Referer') || "/";
+  res.redirect(backURL);
+});
+
+router.get("/logout", function(req, res) {
+  req.logout(function(err) {
+    if(err)
+      res.status(500).json({success: false, error: err.name, message: genericErrorMsg});
+    else
+      res.redirect("/");
+  });
+});
+
+router.get("/account", function(req, res) {
+  try {
+    res.redirect("/account/" + req.user.username);  // "user" property is created in app.param("user") when successfully signed in
+  } catch(error) {
+    setServerMessage(req.app, "Please sign in");
+    res.redirect("/");
+  }
+});
+
+router.get("/account/:user", function(req, res) {
+  if(req.isAuthenticated()) {
+    let favDuelNames = [];
+    let favVidTitles = [];
+    let histDuelNames = [];
+    let histVidTitles = [];
+    User.findOne({username: req.user.username}, function(err, foundUser) {
+      if(err) {
+        res.status(500).json({success: false, error: err.name, message: "An error on the server prevented your account from being identified. Please logout and try again. If you continue to recieve errors, please email me at https://jrz5220.github.io/felixlazo/contact.html and I will respond as soon as I can."});
+      } else if(!foundUser) {
+        setServerMessage(req.app, "Your username could not be identified. Please sign in again.");
+        res.redirect("/logout");
+      } else {
+        try {
+          let hasFavVideos = (foundUser.favorites.length > 0);
+          let hasHistVideos = (foundUser.history.length > 0);
+          for(let i=0; i < foundUser.favorites.length; i++) {
+            favDuelNames.push(foundUser.favorites[i].duelName);
+            favVidTitles.push(foundUser.favorites[i].duelTitle);
+          }
+          for(let i=0; i < foundUser.history.length; i++) {
+            histDuelNames.push(foundUser.history[i].duelName);
+            histVidTitles.push(foundUser.history[i].duelTitle);
+          }
+          res.render("account", {
+            username: foundUser.username,
+            userEmail: foundUser.email,
+            hasFavVideos: hasFavVideos,
+            hasHistVideos: hasHistVideos,
+            favDuelNames: favDuelNames,
+            favVidTitles: favVidTitles,
+            histDuelNames: histDuelNames,
+            histVidTitles: histVidTitles,
+            hasServerMsg: req.app.get("hasServerMsg"),
+            theMsg: req.app.get("theMsg"),
+            hasNewPwdMsg: req.app.get("hasNewPwdMsg"),
+            newPwdMsg: req.app.get("newPwdMsg"),
+            invalidNewEmail: req.app.get("invalidNewEmail"),
+            newEmailErrMsg: req.app.get("newEmailErrMsg")
+          });
+          req.app.disable("hasServerMsg");
+          req.app.disable("hasNewPwdMsg");
+          req.app.disable("invalidNewEmail");
+          // should there be a timeout function to limit the amount of time a user stays signed in?
+        } catch(error) {
+          renderGenericRedirectPage(res, "An Error Has Occured", false, null, "Error: " + error.name, "An error on the server prevented your request from executing. Please logout and try again. If you continue to recieve errors, please email me and I will respond as soon as possible.", true, "/logout", "Logout");
+        }
+      }
+    });
+  } else {
+    setServerMessage(req.app, "Please sign in");
+    res.redirect("/");
+  }
+});
