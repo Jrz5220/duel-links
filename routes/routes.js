@@ -487,3 +487,101 @@ router.route("/account/:user/changePassword")
       }
     });
   });
+
+router.post("/favorite", function(req, res) {
+  if(req.isAuthenticated()) {
+    let favoriteVideo = req.body.videoTitle;
+    User.findOne({username: req.user.username}, function(err, foundUser) {
+      if(err) {
+        res.status(500).json({success: false, error: err.name, message: genericErrorMsg});
+      } else if(!foundUser) {
+        res.sendStatus(403);  // user not found
+      } else {
+        let isDuplicate = false;
+        let userFavorites = foundUser.favorites;
+        for(let i = 0; i < userFavorites.length; i++) {
+          if(userFavorites[i].duelTitle === favoriteVideo) {
+            isDuplicate = true;
+          }
+        }
+        if(!isDuplicate) {
+          if(userFavorites.length > 4) {
+            userFavorites.pop();  // remove last video from array
+          }
+          userFavorites.unshift({duelTitle: favoriteVideo, duelName: req.body.duelName}); // add video to beginning of array
+          foundUser.save().then(function(savedDoc) {
+            res.sendStatus(200);  // successfully updated user favorites
+          });
+        } else {
+          res.sendStatus(400);  // video is already a favorite
+        }
+      }
+    });
+  } else {
+    res.sendStatus(401);  // user not signed in
+  }
+});
+
+router.post("/updateFavorites", function(req, res) {
+  if(req.isAuthenticated()) {
+    User.findOne({username: req.user.username}, function(err, foundUser) {
+      if(err) {
+        const e = {
+          "name": err.name,
+          "message": err.message
+        }
+        res.status(500).json({addedVideo: false, removedVideo: false, error: e});
+      } else if(!foundUser) {
+        const e = {
+          "name": "UserNotFoundError",
+          "message": "A user with that username could not found"
+        }
+        res.status(401).json({addedVideo: false, removedVideo: false, error: e});
+      } else {
+        let favorites = foundUser.favorites;
+        if(req.body.addToFavorites) {
+          let favoriteVideo = req.body.videoTitle;
+          let isDuplicate = false;
+          for(let i = 0; i < favorites.length; i++) {
+            if(favoriteVideo === favorites[i].duelTitle) {
+              isDuplicate = true;
+              break;
+            }
+          }
+          if(!isDuplicate) {
+            if(favorites.length > 4) {
+              favorites.pop();  // remove last video from the array
+            }
+            favorites.unshift({duelTitle: favoriteVideo, duelName: req.body.duelName}); // add video to beginning of array
+            foundUser.save().then(function(savedUser) {
+              res.json({addedVideo: true, removedVideo: false, error: null});
+            });
+          } else {
+            const e = {
+              "name": "DuplicateEntryError",
+              "message": "That video already exists in favorites"
+            }
+            res.status(400).json({addedVideo: false, removedVideo: false, error: e});
+          }
+        } else {
+          let videoToRemove = req.body.videoTitle;
+          for(let i = 0; i < favorites.length; i++) {
+            if(videoToRemove === favorites[i].duelTitle) {
+              favorites.splice(i, 1);
+              break;
+            }
+          }
+          foundUser.save().then(function(savedUser) {
+            res.json({addedVideo: false, removedVideo: true, error: null});
+          });
+        }
+      }
+    });
+  } else {
+    const e = {
+      "name": "NotAuthorizedError",
+      "message": "User not logged in"
+    }
+    res.status(400).json({addedVideo: false, removedVideo: false, error: e});
+  }
+});
