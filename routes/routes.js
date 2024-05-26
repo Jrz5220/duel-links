@@ -183,3 +183,228 @@ router.get("/forgotPassword", function(req, res) {
 });
 
 // get+post /requestPasswordReset
+// here
+
+router.get("/resetPassword/:id/:token", function(req, res) {
+  const {id, token} = req.params;
+  console.log("find user with id: " + id);  // for some reason, when you click the reset link, gmail sends a link with "css" as the id
+  User.findById(id, function(err, foundUser) {
+    if(err) {
+      res.status(500).json({success: false, error: err.name, message: genericErrorMsg});
+    } else if(!foundUser) {
+      renderGenericRedirectPage(res, "User Not Found", false, null, "User Not Found", "Your account could not be identified by the server. You can request a new reset link by submitting the email registered to your account.", true, "/forgotPassword", "Reset Password");
+    } else {
+      // verify the token to make sure it hasn't been tampered with
+      try {
+        console.log("found user: " + foundUser.username);
+        const secret = process.env.JWT_SECRET + foundUser.idForResettingPwd;
+        console.log("verify the secret: " + secret);
+        console.log("verify the token: " + token);
+        const payload = jwt.verify(token, secret);  // if the token is not a match, an error is thrown
+        const submitPwdLink = foundUser.id + "/" + token;
+        res.render("resetPassword", {submitPwdLink: submitPwdLink, invalidPwd: req.app.get("hasServerMsg"), passwordErr: req.app.get("theMsg")});
+        req.app.disable("hasServerMsg");
+      } catch(error) {
+        if(error instanceof jwt.TokenExpiredError)
+          renderGenericRedirectPage(res, "Link Expired", false, null, "Your Reset Link Has Expired", "You must submit your email again to get a new reset link.", true, "/forgotPassword", "Reset Password");
+        else if(error instanceof jwt.JsonWebTokenError)
+          renderGenericRedirectPage(res, "Invalid Link", false, null, "Invalid Link", "Your reset link could not be verified. Please try requesting a new reset link. If you continue to receive errors, please send me an email and I will respond as soon as possible.", true, "/forgotPassword", "Reset Password");
+        else
+          renderGenericRedirectPage(res, "An Error Has Occured", false, null, "Error: " + error.name, "Your reset link does not work due to a server error. Please try requesting a new reset link. If you continue to receive errors, please send me an email and I will respond as soon as possible.", true, "/forgotPassword", "Reset Password");
+      }
+    }
+  });
+});
+
+router.post("/submitNewPassword/:id/:token", function(req, res) {
+  const {id, token} = req.params;
+  User.findById(id, function(err, foundUser) {
+    if(err) {
+      renderGenericRedirectPage(res, "An Error Has Occured", false, null, "Error: " + err.name, "An error on the server prevented your password from being updated. Please try reseting your password again by requesting a new reset link. If you continue to recieve errors, please send me an email and I will respond as soon as possible.", true, "/forgotPassword", "Reset Password");
+    } else if(!foundUser) {
+      renderGenericRedirectPage(res, "User Not Found", false, null, "User Not Found", "Your account could not be identified. Please try requesting a new reset link by using the email registered to your account.", true, "/forgotPassword", "Reset Password");
+    } else {
+      const newPwd = req.body.newPwd;
+      const confirmNewPwd = req.body.confirmNewPwd;
+      const pwdChecker = new RegExp(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,16}$/);
+      if((/\s/).test(newPwd)) {
+        setServerMessage(req.app, "No whitespace");
+        res.redirect("/resetPassword/" + id + "/" + token);
+      } else if(newPwd.localeCompare(confirmNewPwd, "en") !== 0) {
+        setServerMessage(req.app, "Passwords must match");
+        res.redirect("/resetPassword/" + id + "/" + token);
+      } else if(newPwd.length < 8 || newPwd.length > 16) {
+        setServerMessage(req.app, "Password must be between 8 - 16 characters long");
+        res.redirect("/resetPassword/" + id + "/" + token);
+      } else if(pwdChecker.exec(newPwd) === null) {
+        setServerMessage(req.app, "Password must contain at least one lowercase, uppercase, number, and special character");
+        res.redirect("/resetPassword/" + id + "/" + token);
+      } else {
+        foundUser.setPassword(newPwd, function(err, user) {
+          if(err) {
+            renderGenericRedirectPage(res, "An Error Occured", false, null, "Error: " + err.name, "A server error prevented your password from being updated. Please go back and try again or request a new reset link. If you continue to recieve errors, please send me an email and I will respond as soon as possible.", true, "/forgotPassword", "Request New Link");
+          } else if(user) {
+            try {
+              setServerMessage(req.app, "Successfully updated password");
+              foundUser.idForResettingPwd = uuidv4();
+              foundUser.save();
+              renderGenericRedirectPage(res, "Password Updated", false, null, "Successfully Updated Password", "You can now sign in using your new password.", false);
+            } catch(error) {
+              res.status(500).json({success: false, error: err.name, message: "An error on the server occured. Please try using your new password to sign in. If it fails, your password might not have been updated. In that case, you can send me an email at https://jrz5220.github.io/felixlazo/contact.html and I will respond as soon as possible."});
+            }
+          }
+        });
+      }
+    }
+  });
+});
+
+router.get("/registerPage", function(req, res) {
+  res.render("register", {hasServerMsg: req.app.get("hasServerMsg"), theMsg: req.app.get("theMsg")});
+  req.app.disable("hasServerMsg");
+});
+
+router.route("/registerAccount")
+  .get(function(req, res) {
+    res.redirect("/registerPage");
+  })
+  .post(function(req, res) {
+    User.countDocuments(function(err, users) {
+      if(err) {
+        res.status(500).json({success: false, error: err.name, message: genericErrorMsg});
+      } else if(users > 3) {
+        setServerMessage(req.app, "database is full. failed to register account.");
+        res.redirect("/registerPage");
+      } else {
+        let thePwd = req.body.password;
+        let confirmPwd = req.body.confirmPwd;
+        let pwdChecker = new RegExp(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,16}$/);
+        if((/\s/).test(thePwd)) {
+          setServerMessage(req.app, "Password cannot contain whitespace");
+          res.redirect("/registerPage");
+        } else if(thePwd.length < 8 || thePwd.length > 16) {
+          setServerMessage(req.app, "Password must be between 8 - 16 characters long");
+          res.redirect("/registerPage");
+        } else if(pwdChecker.exec(thePwd) === null) {
+          setServerMessage(req.app, "Password must contain at least one lowercase, uppercase, number, and special character");
+          res.redirect("/registerPage");
+        } else if(thePwd.localeCompare(confirmPwd, "en") !== 0) {
+          setServerMessage(req.app, "Passwords must match");
+          res.redirect("/registerPage");
+        } else {
+          let resetPwdId = uuidv4();
+          User.register(new User({username: req.body.username, email: req.body.email, idForResettingPwd: resetPwdId}), thePwd, function(err, user) {
+            if(err) {
+              if(err.name === "UserExistsError") {
+                setServerMessage(req.app, "A user with that username already exists");
+                res.redirect("/registerPage");
+              } else {
+                res.status(500).json({success: false, error: err.name, message: "An error prevented your account from being registered. Please go back and try again. If you continue to recieve errors, please send me an email at https://jrz5220.github.io/felixlazo/contact.html and I will respond as soon as possible."});
+              }
+            } else {
+              // authenticate user (alternate version)
+              // passport.authenticate("local")(req, res, function() {
+              //   console.log("user authenticated!");
+              //   res.redirect("/account");
+              // });
+              res.redirect("/registrationComplete");
+            }
+          });
+        }
+      }
+    });
+  });
+
+router.get("/registrationComplete", function(req, res) {
+  res.render("redirect", {pageTitle: "Registration Complete", containsUserData: false, displayUserData: null, theHeader: "Thank You For Registering!", theMessage: "You can now sign in using your new username and password.", hasAnotherLink: false, theLink: "/", linkText: null});
+});
+
+router.post("/account/:user/removeFavVideos", function(req, res) {      // "user" param gets authenticated in app.param() function
+  const videosToRemove = req.body.videoToRemove;
+  let deletingOneVideo = false;
+  // if user is deleting only one video, videosToRemove is a string (the title of the video)
+  // if multiple videos are being deleted, videosToRemove is an array (list of videos to remove)
+  // if no videos were selected when the delete button was pressed, videosToRemove is undefined
+  if(typeof videosToRemove === "string") {
+    deletingOneVideo = true;
+  }
+  User.findOne({username: req.user.username}, function(err, foundUser) {
+    if(err) {
+      res.status(500).json({success: false, error: err.name, message: "An error on the server prevented your request from executing. Please logout and try again. If you continue to recieve errors, you can send me an email at https://jrz5220.github.io/felixlazo/contact.html and I will respond as soon as possible."});
+    } else if(!foundUser) {
+      setServerMessage(req.app, "Your username could not be identified. Please sign in again.");
+      res.redirect("/logout");
+    } else {
+      if(videosToRemove !== undefined && videosToRemove !== null) {
+        if(deletingOneVideo) {
+          for(let i = 0; i < foundUser.favorites.length; i++) {
+            if(videosToRemove === foundUser.favorites[i].duelTitle) {
+              foundUser.favorites.splice(i, 1);
+              break;
+            }
+          }
+        } else {
+          for(let i = 0; i < videosToRemove.length; i++) {
+            let theVideoToRemove = videosToRemove[i];
+            for(let j = 0; foundUser.favorites.length; j++) {
+              if(theVideoToRemove === foundUser.favorites[j].duelTitle) {
+                foundUser.favorites.splice(j, 1);
+                break;
+              }
+            }
+          }
+        }
+        foundUser.save().then(function(savedUser) {
+          res.redirect("/account/" + foundUser.username);
+        });
+      } else {
+        res.status(500).json({success: false, message: "Could not delete the videos. Please go back and try again. If you are unable to delete the videos, please send me an email at https://jrz5220.github.io/felixlazo/contact.html and I will try to fix the problem."});
+      }
+    }
+  });
+});
+
+router.post("/account/:user/removeHistoryVideos", function(req, res) {
+  const videosToRemove = req.body.videoToRemove;
+  let deletingOneVideo = false;
+  // if user is deleting only one video, videosToRemove is a string (the title of the video)
+  // if multiple videos are being deleted, videosToRemove is an array (list of videos to remove)
+  // if no videos were selected when the delete button was pressed, videosToRemove is undefined
+  if(typeof videosToRemove === "string") {
+    deletingOneVideo = true;
+  }
+  User.findOne({username: req.user.username}, function(err, foundUser) {
+    if(err) {
+      res.status(500).json({success: false, error: err.name, message: genericErrorMsg});
+    } else if(!foundUser) {
+      setServerMessage(req.app, "Your username could not be identified. Please sign in again.");
+      res.redirect("/logout");
+    } else {
+      if(videosToRemove !== undefined && videosToRemove !== null) {
+        if(deletingOneVideo) {
+          for(let i = 0; i < foundUser.history.length; i++) {
+            if(videosToRemove === foundUser.history[i].duelTitle) {
+              foundUser.history.splice(i, 1);
+              break;
+            }
+          }
+        } else {
+          for(let i = 0; i < videosToRemove.length; i++) {
+            let theVideoToRemove = videosToRemove[i];
+            for(let j = 0; foundUser.history.length; j++) {
+              if(theVideoToRemove === foundUser.history[j].duelTitle) {
+                foundUser.history.splice(j, 1);
+                break;
+              }
+            }
+          }
+        }
+        foundUser.save().then(function(savedUser) {
+          res.redirect("/account/" + foundUser.username);
+        });
+      } else {
+        res.redirect("/account/" + foundUser.username);
+      }
+    }
+  })
+});
