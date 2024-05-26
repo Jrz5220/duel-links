@@ -585,3 +585,66 @@ router.post("/updateFavorites", function(req, res) {
     res.status(400).json({addedVideo: false, removedVideo: false, error: e});
   }
 });
+
+router.post("/authenticateLogin", function(req, res) {
+  User.findOne({username: req.body.username}, function(err, foundUser) {
+    if(err) {
+      const theErr = {
+        "name": err.name,
+        "message": err.message
+      }
+      res.status(500).json({maxLoginAttemptsReached: false, loginSuccess: false, error: theErr});
+    } else if(!foundUser) {
+      res.status(400).json({maxLoginAttemptsReached: false, loginSuccess: false, error: null});
+    } else {
+      foundUser.authenticate(req.body.password, function(err, authenticatedUser, passwordErr) {
+        if(err) {
+          const theErr = {
+            "name": err.name,
+            "message": err.message
+          }
+          res.status(500).json({maxLoginAttemptsReached: false, loginSuccess: false, error: theErr});
+        } else if(passwordErr) {
+          if(passwordErr.name === "TooManyAttemptsError") {
+            req.app.enable("maxLoginAttemptsReached");
+            try {
+              checkFailedLoginAttempts(req.app, foundUser);   // reset user login attempts if 20 minutes have passed
+              res.json({maxLoginAttemptsReached: true, loginSuccess: false, error: null});
+            } catch(e) {
+              const theErr = {
+                "name": e.name,
+                "message": e.message
+              }
+              res.status(500).json({maxLoginAttemptsReached: false, loginSuccess: false, error: theErr});
+            }
+          } else {
+            res.status(400).json({maxLoginAttemptsReached: false, loginSuccess: false, error: null});
+          }
+        } else {
+          res.status(200).json({maxLoginAttemptsReached: false, loginSuccess: true, error: null});
+        }
+      });
+    }
+  });
+});
+
+router.post("/authenticatePassword", function(req, res) {
+  User.findOne({username: req.body.username}, function(err, foundUser) {
+    if(err) {
+      res.sendStatus(500);
+    } else if(!foundUser) {
+      setServerMessage(req.app, "incorrect username. Please try again.");
+      res.redirect("/logout");
+    } else {
+      foundUser.authenticate(req.body.password, function(err, authenticatedUser, passwordErr) {
+        if(err) {
+          res.sendStatus(500);
+        } else if(!authenticatedUser) {
+          res.sendStatus(400);
+        } else {
+          res.sendStatus(200);
+        }
+      });
+    }
+  });
+});
