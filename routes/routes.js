@@ -408,3 +408,82 @@ router.post("/account/:user/removeHistoryVideos", function(req, res) {
     }
   })
 });
+
+router.route("/account/:user/changeEmail")
+  .get(function(req, res) {
+    try {
+      res.redirect("/account/" + req.user.username);
+    } catch(err) {
+      setServerMessage(req.app, "Please sign in");
+      res.redirect("/logout");
+    }
+  })
+  .post(function(req, res) {
+    let currentEmail = req.body.currentEmail;
+    let newEmail = req.body.newEmail;
+    User.findOneAndUpdate({email: currentEmail}, {email: newEmail}, function(err, foundUser) {
+      if(err) {
+        if(err.codeName === "DuplicateKey") {
+          req.app.enable("hasServerMsg");
+          req.app.set("invalidNewEmail", true);
+          req.app.set("newEmailErrMsg", "That email is already registered");
+          res.redirect("/account/" + req.user.username);
+        } else {
+          res.status(500).json({success: false, error: err.name, message: "An error on the server prevented your request from executing. Please logout and try again. If you continue to recieve errors, you can send me an email at https://jrz5220.github.io/felixlazo/contact.html and I will repond as soon as possible."});
+        }
+      } else if(!foundUser) {
+        setServerMessage(req.app, "Your account could not be identified. Please sign in again.");
+        res.redirect("/logout");
+      } else {
+        res.redirect("/account/" + foundUser.username);
+      }
+    });
+  });
+
+router.route("/account/:user/changePassword")
+  .get(function(req, res) {
+    try {
+      res.redirect("/account/" + req.user.username);
+    } catch(err) {
+      setServerMessage(req.app, "Please sign in");
+      res.redirect("/logout");
+    }
+  })
+  .post(function(req, res) {
+    User.findOne({username: req.user.username}, function(err, foundUser) {
+      if(err) {
+        res.status(500).json({success: false, error: err.name, message: genericErrorMsg});
+      } else if(!foundUser) {
+        setServerMessage(req.app, "Your account could not be identified. Please sign in again.");
+        res.redirect("/logout");
+      } else {
+        let oldPwd = req.body.currentPwd;
+        let newPwd = req.body.newPwd;
+        let confirmNewPwd = req.body.confirmNewPwd;
+        let pwdChecker = new RegExp(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,16}$/);
+        req.app.enable("hasServerMsg");
+        req.app.set("hasNewPwdMsg", true);
+        if((/\s/).test(newPwd)) {
+          req.app.set("newPwdMsg", "Password cannot contain spaces");
+          res.redirect("/account/" + foundUser.username);
+        } else if(newPwd.length < 8 || newPwd.length > 16) {
+          req.app.set("newPwdMsg", "Password must be between 8 - 16 characters long");
+          res.redirect("/account/" + foundUser.username);
+        } else if(pwdChecker.exec(newPwd) === null) {
+          req.app.set("newPwdMsg", "Password must contain at least one lowercase, uppercase, number, and special character");
+          res.redirect("/account/" + foundUser.username);
+        } else if(newPwd.localeCompare(confirmNewPwd, "en") !== 0) {
+          req.app.set("newPwdMsg", "Passwords must match");
+          res.redirect("/account/" + foundUser.username);
+        } else {
+          foundUser.changePassword(oldPwd, newPwd, function(err) {
+            req.app.set("newPwdMsg", "Successfully updated password");
+            if(err) {
+              req.app.set("newPwdMsg", "Current password is incorrect");
+            }
+            res.redirect("/account/" + foundUser.username);
+          });
+        }
+      }
+    });
+  });
