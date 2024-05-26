@@ -672,3 +672,9 @@ router.post("/checkEmailAvailability", function(req, res) {
     }
   });
 });
+
+router.get("*", function(req, res) {
+  res.render("error404");
+});
+
+module.exports = router;
