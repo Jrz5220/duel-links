@@ -648,3 +648,27 @@ router.post("/authenticatePassword", function(req, res) {
     }
   });
 });
+
+router.post("/checkUsernameAvailability", function(req, res) {
+  User.findOne({username: req.body.username}, function(err, foundUser) {
+    if(err) {
+      res.sendStatus(500);
+    } else if(!foundUser) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(400);
+    }
+  });
+});
+
+router.post("/checkEmailAvailability", function(req, res) {
+  User.findOne({email: req.body.email}, function(err, foundEmail) {
+    if(err) {
+      res.sendStatus(500);
+    } else if(!foundEmail) {
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(400);
+    }
+  });
+});
